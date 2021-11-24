@@ -206,7 +206,7 @@ If possible, try to use reference sequences that are from a species that is equa
   
 **To create a reference file for plastid regions**, there are multiple approaches.
 You can download a plastome in Genbank, in format .gb, open it in Geneious, use the annotation tool to extract all regions that you are interested in, and rename them as required by HybPiper using the command **sed**, or a smart text editor ([BBEdit](https://www.barebones.com/products/bbedit/), [Notepad++](https://notepad-plus-plus.org/), etc.) that allows you to use regular expressions to perform complex find-replace operations.    
-When you want to do it for multiple plastomes, or if you don't have access to Geneious, you can use/customize one of our [scripts](https://github.com/sidonieB/bioinfo-utils/tree/master/docs/advice/scripts), to extract only the regions you want based on the annotations, and rename them as you wish.
+When you want to do it for multiple plastomes, or if you don't have access to Geneious, you can use/customize one of our [scripts](https://github.com/sidonieB/scripts), to extract only the regions you want based on the annotations, and rename them as you wish.
   
 Depending on your input it will be relevant or not to use the "intronerate" option without modifications (see below).
 If you choose to use blast, your reference file will have to provide amino-acid sequences, so it may not make sense to use blast for something else than coding sequences.
