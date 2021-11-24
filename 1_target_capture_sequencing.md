@@ -6,18 +6,18 @@ Here we only talk about data obtained from the Illumina sequencing of target DNA
   
 We, Kew scientists using target capture sequencing, provide here a summary of target capture and sequencing as it is performed at Kew, and we also include points of discussion that have proven to be relevant to many of us.  
   
-This document does not pretend to be exhaustive, and another great resource is for instance the documentation provided [here](https://github.com/mossmatters/HybPiper) and [here](https://github.com/mossmatters/KewHybSeqWorkshop) by [Matt Johnson](https://github.com/mossmatters) (Texas Tech University, USA), [Eliott Gardner](https://www.plantbiology.northwestern.edu/people/alumni/title/elliot-gardner.html) (Morton Arboretum, USA) and [N. Wickett](http://faculty.wcas.northwestern.edu/wickett/) (Northwestern University, USA), who contributed to the development of the [PAFTOL bait kit](https://www.biorxiv.org/content/biorxiv/early/2018/07/04/361618.full.pdf) (see below) together with Kew.
+This document does not pretend to be exhaustive, and another great resource is for instance the documentation provided [here](https://github.com/mossmatters/HybPiper) and [here](https://github.com/mossmatters/KewHybSeqWorkshop) by [Matt Johnson](https://github.com/mossmatters) (Texas Tech University, USA), [Eliott Gardner](https://www.plantbiology.northwestern.edu/people/alumni/title/elliot-gardner.html) (Morton Arboretum, USA) and [N. Wickett](http://faculty.wcas.northwestern.edu/wickett/) (Northwestern University, USA), who contributed to the development of the [PAFTOL bait kit](https://academic.oup.com/sysbio/article/68/4/594/5237557) (see below) together with Kew.
 
   
 
-[Bait design](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_sequencing.md#bait-design)  
-[DNA preparation and target capture](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_sequencing.md#dna-preparation-and-target-capture)  
-[Sequencing](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_sequencing.md#sequencing-of-the-captured-dna)  
+[Bait design](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#bait-design)  
+[DNA preparation and target capture](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#dna-preparation-and-target-capture)  
+[Sequencing](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#sequencing-of-the-captured-dna)  
   
-[Details](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_sequencing.md#details)  
-[Bait design details](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_sequencing.md#details-about-the-bait-design)  
-[Library size and splash-zone](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_sequencing.md#details-about-the-dna-library-size-and-the-splash-zone)  
-[Adapters](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_sequencing.md#details-about-the-adapters)  
+[Details](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details)  
+[Bait design details](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details-about-the-bait-design)  
+[Library size and splash-zone](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details-about-the-dna-library-size-and-the-splash-zone)  
+[Adapters](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details-about-the-adapters)  
 
 
 
@@ -83,7 +83,7 @@ When we want to be able to capture genetically divergent taxa with a same bait, 
 * One can target regions that are conserved enough to be captured by a same bait but divergent enough so that they provide phylogenetic signal. This is possible to a certain extent because baits can hybridize to divergent DNA, but at some level of divergence this becomes inefficient because the baits will hybridize a lot to non-desired regions.  
 In addition, since the efficiency of hybridization is proportional to the bait-target similarity, if, in a same hybridization pool, some taxa have DNA more similar to the baits than other taxa, the captured DNA may come mostly from the taxa with the DNA the most similar to the baits.
   
-* Another way is to design multiple baits targeting the same DNA region, with some baits more similar to some taxa than to others. This is the approach chosen for the [PAFTOL project](https://www.kew.org/science/who-we-are-and-what-we-do/strategic-outputs-2020/plant-and-fungal-trees-life), but they refined it, as explained in [their article](https://www.biorxiv.org/content/biorxiv/early/2018/07/04/361618.full.pdf).
+* Another way is to design multiple baits targeting the same DNA region, with some baits more similar to some taxa than to others. This is the approach chosen for the [PAFTOL project](https://www.kew.org/science/who-we-are-and-what-we-do/strategic-outputs-2020/plant-and-fungal-trees-life), but they refined it, as explained in [their article](https://academic.oup.com/sysbio/article/68/4/594/5237557).
   
 * Another, compatible, way is to target regions that are flanked by more variable regions. The flanking regions will come along during the capture if there are DNA fragments containing part of the target region (enough for a bait to hybridize) and part of the flanking region. The larger the library size is, the longer the flanking region that can be captured is, but the higher the effort required to sequence the complete flanking region will be, as shown in [Figure 3](https://github.com/sidonieB/Workflows/blob/main/images/Fig3_splash_zone.jpg).  
 The sequenced flanking regions form what [some people](https://github.com/mossmatters/KewHybSeqWorkshop/blob/master/images/supercontig.png) call the **splash zone**. 
