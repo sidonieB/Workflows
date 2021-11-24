@@ -1,13 +1,13 @@
 # **Phylogenomics tips**
 
-[Multiple sequence alignments](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/from_sequences_to_phylogenies.md#1-multiple-sequence-alignments)  
-[Gene trees](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/from_sequences_to_phylogenies.md#2-gene-trees)  
-[Spotting alignment problems by observing gene trees](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/from_sequences_to_phylogenies.md#3-spotting-alignment-problems)  
-[Species tree estimation using ASTRAL](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/from_sequences_to_phylogenies.md#4-infer-species-tree-with-astral)  
-[Rooting trees](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/from_sequences_to_phylogenies.md#5-rooting-trees)  
-[Calculate clade support](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/from_sequences_to_phylogenies.md#6-calculate-support)  
-[Visualize support](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/from_sequences_to_phylogenies.md#7-visualize-support-on-the-species-tree)  
-[Dating divergence times](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/from_sequences_to_phylogenies.md#8-dating-divergence-times)  
+[Multiple sequence alignments](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#1-multiple-sequence-alignments)  
+[Gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#2-gene-trees)  
+[Spotting alignment problems by observing gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#3-spotting-alignment-problems)  
+[Species tree estimation using ASTRAL](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#4-infer-species-tree-with-astral)  
+[Rooting trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#5-rooting-trees)  
+[Calculate clade support](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#6-calculate-support)  
+[Visualize support](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#7-visualize-support-on-the-species-tree)  
+[Dating divergence times](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#8-dating-divergence-times)  
 
 
 ## **1. Multiple Sequence Alignments**
@@ -32,7 +32,7 @@ parallel --eta "mafft --localpair --adjustdirectionaccurately --maxiterate 1000 
 This is just an example, look at the documentation to chose adequate options!
 Note the "--adjustdirectionaccurately" option, which reverse complement sequences if necessary.
   
-As well as running MAFFT with the GNU-Parallel command, it’s possible, as with HybPiper, to run this in parallel on a cluster as a simple array job using one CPU for each gene.  
+As well as running MAFFT with the GNU-Parallel command, it’s possible, as with HybPiper, to run this in parallel on a cluster as a simple array job using one CPU for each gene, for instance through slurm. See the example_scripts folder.  
   
 Alternatively, for aligning big alignments MAFFt has a –thread option that can be set to the number of cores on your machine.   
 Explained [here](https://mafft.cbrc.jp/alignment/software/multithreading.html).  
@@ -66,7 +66,7 @@ python3  AMAS.py summary -i alignment.fasta -f fasta -d dna
 ```
 
 ### Spotting alignment problems and trimming alignments
-[FluenDNA](https://github.com/josiahseaman/FluentDNA) allows to look at many alignments and visually spot abnormalities, changes in nucleotide frequencies etc.  
+[FluentDNA](https://github.com/josiahseaman/FluentDNA) allows to look at many alignments and visually spot abnormalities, changes in nucleotide frequencies etc.  
 
 We have used [trimAl](http://trimal.cgenomics.org/) to trim alignments.  
 It can be used to trim out columns or sequences based on their gap content.  
@@ -79,6 +79,8 @@ Another suite of tools to perform similar tasks and many others is [phyutility](
 
 Trimming can sometimes result in loss of informativeness. It may be worthwhile to check that the trimming parameters did not actually make things worse. For example, one can use our **optrimAl** R script (+ pasta_taster bash script), which uses [AMAS](https://github.com/marekborowiec/AMAS) to explore the effect of different trimAl gap threshold values on the proportion of parsimony informative sites and amount of data loss.
 
+[TAPER](https://github.com/chaoszhang/TAPER) is the only tool we know so far that can remove spurious bits in individual sequences. It is not perfect though and only the default settings seem to work as expected.  
+
 ### Renaming sequences in all alignments
   
 We have scripts for that, just ask!
@@ -86,6 +88,7 @@ We have scripts for that, just ask!
 ## **2. Gene trees**
 
 ### Model selection
+This can be done efficiently in IQ tree and the model chosen can then be indicated to RAxML, which performs the "standard" (not ultrafast) bootstrap more quickly than IQ tree.
 
 ### Gene tree estimation using maximum likelihood
 We often use RAxML, see full documentation [here](https://sco.h-its.org/exelixis/web/software/raxml/) to understand the options.  
@@ -103,7 +106,7 @@ For concatenated alignments RaxML can also be run in MPI mode, or in HYBRID mode
   
 The trees to be used for species tree estimation with ASTRAL (see below) are the RAxML_bipartitions.* trees, NOT the RAxML_bipartitionsBranchLabels.* trees.
 
-Another accurate option is [IQ-Tree](http://www.iqtree.org/)
+Another accurate option is [IQ-Tree](http://www.iqtree.org/) but the ultra-fast bootstrap is less accurate and its standard bootstrap takes much more time to compute than when done in RAxML
   
 ## **3. Spotting alignment problems by observing gene trees**
 
