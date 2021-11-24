@@ -25,7 +25,7 @@ This document does not pretend to be exhaustive, and another great resource is f
 
 We first have to design baits to capture the target DNA
 
-[Figure 1](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/images/Fig1_bait_design.jpg)
+[Figure 1](https://github.com/sidonieB/Workflows/blob/main/images/Fig1_bait_design.jpg)
 
 1. we choose some genes that we want to study. These genes are the **target** genes.
   
@@ -41,7 +41,7 @@ People usually rely on a company to design and to synthesize the baits.
 
 Once the bait kit is ready, it can be used to capture the target regions from one or multiple DNA samples.
 
-[Figure 2](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/images/Fig2_target_capture.jpg)
+[Figure 2](https://github.com/sidonieB/Workflows/blob/main/images/Fig2_target_capture.jpg)
 
 1. we extract the genomic DNA of an individual. 
   
@@ -85,7 +85,7 @@ In addition, since the efficiency of hybridization is proportional to the bait-t
   
 * Another way is to design multiple baits targeting the same DNA region, with some baits more similar to some taxa than to others. This is the approach chosen for the [PAFTOL project](https://www.kew.org/science/who-we-are-and-what-we-do/strategic-outputs-2020/plant-and-fungal-trees-life), but they refined it, as explained in [their article](https://www.biorxiv.org/content/biorxiv/early/2018/07/04/361618.full.pdf).
   
-* Another, compatible, way is to target regions that are flanked by more variable regions. The flanking regions will come along during the capture if there are DNA fragments containing part of the target region (enough for a bait to hybridize) and part of the flanking region. The larger the library size is, the longer the flanking region that can be captured is, but the higher the effort required to sequence the complete flanking region will be, as shown in [Figure 3](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/images/Fig3_splash_zone.jpg).  
+* Another, compatible, way is to target regions that are flanked by more variable regions. The flanking regions will come along during the capture if there are DNA fragments containing part of the target region (enough for a bait to hybridize) and part of the flanking region. The larger the library size is, the longer the flanking region that can be captured is, but the higher the effort required to sequence the complete flanking region will be, as shown in [Figure 3](https://github.com/sidonieB/Workflows/blob/main/images/Fig3_splash_zone.jpg).  
 The sequenced flanking regions form what [some people](https://github.com/mossmatters/KewHybSeqWorkshop/blob/master/images/supercontig.png) call the **splash zone**. 
   
 At the inter-generic level, it may be difficult to find conserved regions flanked by regions that are variable but still conserved enough to be aligned between taxa, so the last approach is most beneficial at the intra-generic level. 
@@ -114,7 +114,7 @@ There are many things to consider:
 * If you sequence together DNAs of different fragment sizes, **the smaller fragments will be sequenced preferentially**, so in general you may want to fragment your DNAs so that all your libraries have a similar size. Or to sequence libraries of different sizes separately (which increases sequencing costs).  
 Some size variation is ok, and one can adjust the molarity of individual libraries to correct for it, but usually the more variable the libraries are, the less homogenous the results will be.  
 
-* The longer the fragment size is, the longer the splash zone may be (at the condition of a sufficient sequencing effort, see [Figure 3](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/images/Fig3_splash_zone.jpg))  
+* The longer the fragment size is, the longer the splash zone may be (at the condition of a sufficient sequencing effort, see [Figure 3](https://github.com/sidonieB/Workflows/blob/main/images/Fig3_splash_zone.jpg))  
 
 * If a non-negligible proportion of the DNA library is smaller than the read length you chose, the sequencing will fail.
   
@@ -128,5 +128,5 @@ Adapters are important because:
   
 * They allow the DNA fragment to be fixed on the **flow cell** during the sequencing process.
 
-Details about how the adapters are put on the DNA, how the DNA is sequenced, what data result from this, and why we end up with pieces of adapters in the reads are given [here](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/images/Adapters.pdf) (see the last page for a summary of what adapters are in the data).
+Details about how the adapters are put on the DNA, how the DNA is sequenced, what data result from this, and why we end up with pieces of adapters in the reads are given [here](https://github.com/sidonieB/Workflows/blob/main/images/Adapters.pdf) (see the last page for a summary of what adapters are in the data).
 
