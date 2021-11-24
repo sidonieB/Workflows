@@ -1,8 +1,8 @@
 # **Some papers that some of us found useful**
 
-[Alignment](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/usefull_reads_phylogenomics.md#alignment)  
-[Tree concordance](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/usefull_reads_phylogenomics.md#tree-concordance)  
-[Missing data](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/usefull_reads_phylogenomics.md#missing-data)  
+[Alignment](https://github.com/sidonieB/Workflows/blob/main/4_useful_reads_phylogenomics.md#alignment)  
+[Tree concordance](https://github.com/sidonieB/Workflows/blob/main/4_useful_reads_phylogenomics.md#tree-concordance)  
+[Missing data](https://github.com/sidonieB/Workflows/blob/main/4_useful_reads_phylogenomics.md#missing-data)  
 
 
 ## **Alignment**
