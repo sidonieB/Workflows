@@ -10,14 +10,14 @@ This document does not pretend to be exhaustive, and another great resource is f
 
   
 
-[Bait design](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#bait-design)  
-[DNA preparation and target capture](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#dna-preparation-and-target-capture)  
-[Sequencing](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#sequencing-of-the-captured-dna)  
+[Bait design](https://github.com/sidonieB/Workflows/blob/main/1_target_capture_sequencing.md#bait-design)  
+[DNA preparation and target capture](https://github.com/sidonieB/Workflows/blob/main/1_target_capture_sequencing.md#dna-preparation-and-target-capture)  
+[Sequencing](https://github.com/sidonieB/Workflows/blob/main/1_target_capture_sequencing.md#sequencing-of-the-captured-dna)  
   
-[Details](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details)  
-[Bait design details](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details-about-the-bait-design)  
-[Library size and splash-zone](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details-about-the-dna-library-size-and-the-splash-zone)  
-[Adapters](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details-about-the-adapters)  
+[Details](https://github.com/sidonieB/Workflows/blob/main/1_target_capture_sequencing.md#details)  
+[Bait design details](https://github.com/sidonieB/Workflows/blob/main/1_target_capture_sequencing.md#details-about-the-bait-design)  
+[Library size and splash-zone](https://github.com/sidonieB/Workflows/blob/main/1_target_capture_sequencing.md#details-about-the-dna-library-size-and-the-splash-zone)  
+[Adapters](https://github.com/sidonieB/Workflows/blob/main/1_target_capture_sequencing.md#details-about-the-adapters)  
  
 
 
