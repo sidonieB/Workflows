@@ -1,6 +1,6 @@
 # **Analyse target capture data to obtain regions of interest**
     
-[Working environment, pre-requisites and best practices](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#1-working-environment-pre-requisites-and-best-practices)  
+[Working environment, pre-requisites and best practices](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#1-working-environment-pre-requisites-and-best-practices)  
 [Checking data quality](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#2-checking-data-quality)  
 [Cleaning data](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#3-cleaning-data)  
 [Assembly strategy and reference file](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#4-choosing-a-strategy-to-assemble-the-data-and-formatting-the-reference-file)  
