@@ -1,21 +1,21 @@
 # **Analyse target capture data to obtain regions of interest**
     
 [Working environment, pre-requisites and best practices](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#1-working-environment-pre-requisites-and-best-practices)  
-[Checking data quality](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#2-checking-data-quality)  
-[Cleaning data](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#3-cleaning-data)  
-[Assembly strategy and reference file](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#4-choosing-a-strategy-to-assemble-the-data-and-formatting-the-reference-file)  
-[Hybpiper tips](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#5-tips-when-running-hybpiper)  
-- [Name list](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#name-list)  
-- [PATH](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#path)  
-- [Hybpiper command](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#typical-command)  
-- [Retrieving the splash zone](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#retrieving-the-splash-zone)  
-- [Gathering homologous sequences from all samples](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#gathering-supposedly-homologous-regions-from-all-samples)  
-- [Running long or memory-consuming jobs](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#running-long-or-heavy-jobs)  
-- [Checking for paralogs](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#checking-for-paralogs)  
+[Checking data quality](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#2-checking-data-quality)  
+[Cleaning data](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#3-cleaning-data)  
+[Assembly strategy and reference file](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#4-choosing-a-strategy-to-assemble-the-data-and-formatting-the-reference-file)  
+[Hybpiper tips](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#5-tips-when-running-hybpiper)  
+- [Name list](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#name-list)  
+- [PATH](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#path)  
+- [Hybpiper command](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#typical-command)  
+- [Retrieving the splash zone](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#retrieving-the-splash-zone)  
+- [Gathering homologous sequences from all samples](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#gathering-supposedly-homologous-regions-from-all-samples)  
+- [Running long or memory-consuming jobs](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#running-long-or-heavy-jobs)  
+- [Checking for paralogs](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#checking-for-paralogs)  
   
-[General advice](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#general-advice)  
-[Target capture efficiency](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#6-assess-target-capture-efficiency)  
-[Improving target recovery](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#7-improving-target-recovery)  
+[General advice](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#general-advice)  
+[Target capture efficiency](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#6-assess-target-capture-efficiency)  
+[Improving target recovery](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#7-improving-target-recovery)  
     
     
 ## **1. Working environment, pre-requisites, and best practices**
