@@ -18,7 +18,7 @@ This document does not pretend to be exhaustive, and another great resource is f
 [Bait design details](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details-about-the-bait-design)  
 [Library size and splash-zone](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details-about-the-dna-library-size-and-the-splash-zone)  
 [Adapters](https://github.com/sidonieB/Workflows/edit/main/1_target_capture_sequencing.md#details-about-the-adapters)  
-
+ 
 
 
 ### Bait design
