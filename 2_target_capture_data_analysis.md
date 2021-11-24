@@ -1,21 +1,21 @@
 # **Analyse target capture data to obtain regions of interest**
     
-[Working environment, pre-requisites and best practices](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#1-working-environment-pre-requisites-and-best-practices)  
-[Checking data quality](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#2-checking-data-quality)  
-[Cleaning data](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#3-cleaning-data)  
-[Assembly strategy and reference file](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#4-choosing-a-strategy-to-assemble-the-data-and-formatting-the-reference-file)  
-[Hybpiper tips](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#5-tips-when-running-hybpiper)  
-- [Name list](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#name-list)  
-- [PATH](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#path)  
-- [Hybpiper command](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#typical-command)  
-- [Retrieving the splash zone](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#retrieving-the-splash-zone)  
-- [Gathering homologous sequences from all samples](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#gathering-supposedly-homologous-regions-from-all-samples)  
-- [Running long or memory-consuming jobs](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#running-long-or-heavy-jobs)  
-- [Checking for paralogs](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#checking-for-paralogs)  
+[Working environment, pre-requisites and best practices](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#1-working-environment-pre-requisites-and-best-practices)  
+[Checking data quality](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#2-checking-data-quality)  
+[Cleaning data](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#3-cleaning-data)  
+[Assembly strategy and reference file](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#4-choosing-a-strategy-to-assemble-the-data-and-formatting-the-reference-file)  
+[Hybpiper tips](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#5-tips-when-running-hybpiper)  
+- [Name list](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#name-list)  
+- [PATH](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#path)  
+- [Hybpiper command](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#typical-command)  
+- [Retrieving the splash zone](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#retrieving-the-splash-zone)  
+- [Gathering homologous sequences from all samples](https://github.com/sidonieBWorkflows/2_target_capture_data_analysis.md#gathering-supposedly-homologous-regions-from-all-samples)  
+- [Running long or memory-consuming jobs](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#running-long-or-heavy-jobs)  
+- [Checking for paralogs](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#checking-for-paralogs)  
   
-[General advice](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#general-advice)  
-[Target capture efficiency](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#6-assess-target-capture-efficiency)  
-[Improving target recovery](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/target_capture_data_analysis.md#7-improving-target-recovery)  
+[General advice](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#general-advice)  
+[Target capture efficiency](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#6-assess-target-capture-efficiency)  
+[Improving target recovery](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#7-improving-target-recovery)  
     
     
 ## **1. Working environment, pre-requisites, and best practices**
@@ -26,15 +26,15 @@ There are already many free tools, pipelines and tutorials available so most oft
 
 Tutorials to **learn basic linux commands** can be found on the Internet. Knowing basic commands will be necessary. You should at least be able to create a directory, move from a directory to another, copy or move files, look into the beginning or the end of a file, find a pattern inside a file, and get information about a particular command.
   
-More important than knowing many commands is to **understand the principles behind the tool that you use**, so that you can correctly analyze the data and properly interpret the results. But this does not require high bioinformatic skills, it requires to read the manual or article associated with the tool. More on this topic is provided [here](http://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/cluster/cluster-tips/).  
+More important than knowing many commands is to **understand the principles behind the tool that you use**, so that you can correctly analyze the data and properly interpret the results. But this does not require high bioinformatic skills, it requires to read the manual or article associated with the tool.    
   
 When you cannot find the tool you need or when you have difficulties to understand what is happening, ask a (bio)informatician!  
   
 Kew has computing facilities that have been set up to enable the analysis of large amounts of target capture sequencing data by multiple users. Before using them, please ensure to:  
   
-- **make yourself known** to Michael Chester or Pepijn Kooij for the general usage machines and to James Crowe for the cluster.
-- **get familiar with the [facilities](http://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/Machines/)** 
-- **take note of the general best practices described [here](http://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/best-practice/Best_practice/), and of the best usage practices described [here](http://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/utils/logging-jobs/) for the general usage machines, and [here](http://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/cluster/__intro/) for the cluster.**
+- **make yourself known** to the people managing the Kew High Performance Computing facility, and ask them for an account on the HPC.
+- **get familiar with the [facilities](https://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/kewhpc/)** 
+- **get familiar with the [slurm system](https://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/software/slurm/), which allows to submit and manage jobs on the HPC. See also the separate slurm cheat sheet.**
 
 Below we provide information on our current strategies to analyse target capture data to obtain multiple sequence alignments for individual genes.  
 We also list useful software and give some default commands to use them, as well as some tips to use these software on multiple samples at once.  
@@ -48,15 +48,15 @@ If the sequencing was **paired-end**, the data come in two files usually labelle
   
 The format of the data is [**fastq**](https://en.wikipedia.org/wiki/FASTQ_format), which means that you have the sequencing reads and the quality of each **base** (nucleotide) of the read inside a single file. The quality of each base is expressed as the probability of the base to have been wrongly identified ("called") by the Illumina software. This is the [**phred score**](https://en.wikipedia.org/wiki/Phred_quality_score). Instead of being directly written in the file, each phred score is represented by a single character, following a code. This reduces the space taken by the fastq file. There are different codes that are used by different sequencing technologies. Current (2018) Illumina software (>v.1.8) use **phred33**. This is important to know because some data processing tools ask the user to specify it. 
   
-The first thing to do when you get your data is to check if the reads are of sufficient quality, and to decide what to do to improve the quality of the individual reads and of the whole dataset. This is also the step where you can spot contamination by completely unrelated organisms (for instance fungi or bacteria when sequencing plants).
+The first thing to do when you get your data is to check if the reads are of sufficient quality, and to decide what to do to improve the quality of the individual reads and of the whole dataset. This is also the step where you can spot contamination by completely unrelated organisms (for instance fungi or bacteria when sequencing plants), although strict contamination checks should be done separately and are not described here. See for instance [this tool] (https://genomebiology.biomedcentral.com/articles/10.1186/gb-2014-15-3-r46) if you are interested.
   
-A great software to do this is [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) (S. Andrews, Babraham Bioinformatics), but there are other programs available.
+A great software to check sequencing read quality is [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) (S. Andrews, Babraham Bioinformatics), but there are other programs available.
 
 To understand the graphical output of FastQC please follow this [link](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/).
 
 Looking at the FASTQC results should help you decide which quality score threshold you want to accept as sufficient for each read base or each read. If your data is not of very good quality you may prefer to set a lower quality threshold so that you can still have enough data to perform your analyses, but if you do this you will have to keep in mind that there may still be many errors in the reads. This may be acceptable depending on your question or depending on how many reads of a base of interest you have.
 
-An alternative to look at the quality of all the samples could be to use the script “clean_reads.py” of the pipeline [SEQCAPR](https://peerj.com/preprints/26477/) (Andermann et al., 2018). This script will trim the reads (see below) and produce a graphical summary of their quality for all species together.
+An alternative to look at the quality of all the samples at once could be to use the script “clean_reads.py” of the pipeline [SEQCAPR](https://peerj.com/articles/5175/) (Andermann et al., 2018). This script will trim the reads (see below) and produce a graphical summary of their quality for all species together, but the trimming can also be skipped so that once can just look at the quality and trim separately.
 
 ### CODE TIPS
 
@@ -72,6 +72,7 @@ gunzip file
 But ask yourself if it is really necessary before, because you will use more space.  
 The program fastqc works on zipped (.gz) files as well as on fastq files.
 
+  
 **Loops** are used to perform a same operation (or suite of operations) on multiple inputs, one input after the other.  
 The basic structure of the loop is:  
 **for each_input; do (the operation); done**  
@@ -82,9 +83,21 @@ for f in *.fastq; do (fastqc $f); done
 "for f in \*.fastq" sets the loop: the loop will iterate as many times as there are objects of name finishing by ".fastq" in the current directory.  
 At each iteration, a variable named f is created, and the object of name finishing by ".fastq" on which the loop is currently iterating is assigned to f, overwriting the previous value of f.  
 "do ()" indicates an action to perform at each iteration of the loop (for instance run fastqc with the variable f as input).   
-$f indicates that f is a variable.  
+$f indicates that f is a variable.
   
-To copy files from your laptop/desktop to the remote server and vice versa, you can use the command **scp**:
+**NB:** A loop may not be necessary if you use slurm, because you can set an array job, which means that a same job (for instance a fastqc check) will be run in parallel for as many files as you specify. See the slurm cheat sheet for more details.  
+
+An example of **commands to check the data quality** before or after trimming, using fastqc through Secapr:  
+```
+source activate secapr_env
+secapr quality_check --input data/raw/fastq/ --output data/fastqc_results/
+conda deactivate
+```
+NB: Secapr needs to be ran in its conda environment (see doc [here](https://github.com/AntonelliLab/seqcap_processor)). So far you cannot make an array job to run secapr in parallel on all samples, but you can run two secapr jobs in parallel on the R1 files and the R2 files of many samples if you put the R1 and R2 files in separate folders. This allows to be more efficient while keeping the nice functionality of secapr, which is that it makes a graph summarising results from all samples, a functionality not available in fastqc.  
+See the example_scripts folder for an example of how to run this on a cluster using slurm.
+
+  
+**To copy files from your laptop/desktop to the remote server and vice versa, you can use the command scp**:
 ```
 scp path/to/file/on/local/computer user@server_address:/path/to/directory/on/server
 
@@ -142,9 +155,20 @@ The Trimmomatic command can be designed the same way, carefully. For instance:
 ```
 for f in *R1_001.fastq; do (java -jar ~/software/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 $f ${f/R1_001.fastq}R2_001.fastq ${f/R1_001.fastq}R1_001_Tpaired.fastq ${f/R1_001.fastq}R1_001_Tunpaired.fastq ${f/R1_001.fastq}R2_001_Tpaired.fastq ${f/R1_001.fastq}R2_001_Tunpaired.fastq ILLUMINACLIP:~/software/Trimmomatic-0.36/adapters/TruSeq3-PE-2.fa:1:30:7:2:true MAXINFO:40:0.85 MINLEN:36); done
 ```
+
+An example of a basic Trimmomatic command (not using MAXINFO) that worked well on 2x150 bp paired-end reads from herbarium samples:
+```
+java -jar Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 R1_file R2_file R1_Tpaired.fastq R1_Tunpaired.fastq R2_Tpaired.fastq R2_Tunpaired.fastq ILLUMINACLIP:Trimmomatic-0.39/adapters/TruSeq3-PE-2.fa:1:30:7:2:true SLIDINGWINDOW:4:30 LEADING:30 MINLEN:40
+```
+See the example_scripts folder for an example of how to run this on a cluster using slurm.
+
+
 **BE CAREFUL!**  
 You need to understand the above command and adapt it to our needs/input names!  
-THE ORDER OF THE OUTPUT FILES MATTERS!
+**THE ORDER OF THE OUTPUT FILES MATTERS!**
+  
+
+
 
 
 ## **4. Choosing a strategy to assemble the data, and formatting the reference file**
@@ -154,13 +178,13 @@ There are multiple pipelines to analyze target capture sequencing data and to pr
 At Kew, we often use **HybPiper** or a homemade pipeline inspired by it: **PAFTOOLS**. However, there may be more adequate pipelines depending on your needs, or, more likely, you will need to customize an existing pipeline.  
   
 HybPiper has the advantage to be relatively easy to customize, his author [Matt Johnson](https://github.com/mossmatters) is very helpful, and the pipeline allows us to retrieve the [splash-zone](https://github.com/sidonieB/bioinfo-utils/blob/master/docs/advice/images/Fig3_splash_zone.jpg), which is of interest to many people working at Kew.  
-What follows is based on Hybpiper. If you want to use PAFTOOLS, talk to Jan Kim.  
+What follows is based on Hybpiper.
   
-You should read about HybPiper [here](https://github.com/mossmatters/HybPiper) and [here](https://github.com/mossmatters/KewHybSeqWorkshop) before trying it by yourself, because the original tutorial is very detailed and useful, and because it may contain updates that we overlooked (please let us know!). Below we only give some additional tips.
+You should read about HybPiper [here](https://github.com/mossmatters/HybPiper), [here](https://github.com/mossmatters/HybPiper/wiki), [here](https://github.com/mossmatters/HybPiper/wiki/Tutorial), and [here](https://github.com/mossmatters/KewHybSeqWorkshop) before trying it by yourself, because the original tutorial is very detailed and useful, and because it may contain updates that we overlooked (please let us know!). Below we only give some additional tips.
 
-HybPiper and PAFTOOLS both:
-- align (map) the reads on the reference sequences of the genes that you want to retrieve, 
-- keep the reads that align well to the target genes, as well as their mates, 
+HybPiper:
+- aligns (maps) the reads on the reference sequences of the genes that you want to retrieve, 
+- keeps the reads that align well to the target genes, as well as their mates, 
 - assemble separately the groups of reads corresponding to each gene to generate a consensus for each gene.  
   
 However, even if you do target capture, it may be a good idea to map the reads on a full genome, where your targets are annotated. This may improve the read mapping, avoid artefacts created by wrong mappings, and make easier the recovery of the regions flanking the genes of interest. Let us know if you test it!
@@ -175,7 +199,10 @@ The format should be **exactly** as following (in the same order, with the hyphe
 AAAAAAATTTTTTTTTGGGGGGGGGCCCCCCCC  
 This allows to provide reference sequences of a same gene from different species, and to align homologous genes to each other later.  
   
-You can ask HybPiper to retrieve other things than your target. For instance you can provide plastid genes, or even complete plastid genomes, formatted the same way.  
+You can ask HybPiper to retrieve other things than your target. For instance you can provide plastid genes, or even complete plastid genomes, formatted the same way. 
+  
+If you can, try to use references that are closely related to your samples. In addition, it can be useful to use an **iterative approach** where you first try to retrieve genes from all your samples, and then you use the sequences retrieved from your best sample to create a new reference file, with which you then try the recovery again on all other samples. This can improve recovery if the sequences of the original reference file were from a species very distantly related from your samples.  
+If possible, try to use reference sequences that are from a species that is equally distantly related from all your samples, so that you can assume that recovery success was not biased by phylogenetic distance to the species used to make the reference file. (In practice, this is rarely accounted for and I am not sure how important this bias may be, feedback welcome!). 
   
 **To create a reference file for plastid regions**, there are multiple approaches.
 You can download a plastome in Genbank, in format .gb, open it in Geneious, use the annotation tool to extract all regions that you are interested in, and rename them as required by HybPiper using the command **sed**, or a smart text editor ([BBEdit](https://www.barebones.com/products/bbedit/), [Notepad++](https://notepad-plus-plus.org/), etc.) that allows you to use regular expressions to perform complex find-replace operations.    
@@ -183,7 +210,7 @@ When you want to do it for multiple plastomes, or if you don't have access to Ge
   
 Depending on your input it will be relevant or not to use the "intronerate" option without modifications (see below).
 If you choose to use blast, your reference file will have to provide amino-acid sequences, so it may not make sense to use blast for something else than coding sequences.
-However, we found out empirically that blast allows to recover less reads, but longer genes, than with bwa, regardless if sequences were coding or not.
+However, we found out empirically that blast allows to recover less reads, but longer genes, than bwa, regardless if sequences were coding or not. A downside is that less statistics on recovery are available when using blast compared to bwa. In general you may want to first try bwa.  
 
 
 ## **5. Tips when running Hybpiper**
@@ -254,6 +281,9 @@ If you want to use unpaired reads in hybpiper, you need to have all unpaired rea
 ```
 for f in *R1_001_Tunpaired.fastq; do (cat $f ${f/R1_001_Tunpaired.fastq}R2_001_Tunpaired.fastq > ${f/R1_001_Tunpaired.fastq}TunpairedAll.fastq); done
 ```
+
+### Typical command when using slurm
+You will not need a loop, but instead create an array job. See the example_scripts folder for an example of how to run this on a cluster using slurm.
   
 ### Retrieving the splash zone
 You can retrieve the flanking regions of the target regions using Matt Johnson's intronerate script from the HybPiper directory.
@@ -262,6 +292,9 @@ while read name
 do python intronerate.py --prefix $name
 done < namelist.txt
 ```
+OR adapt this command for slurm as shown in the example_scripts folder for the main command.
+**NB:** As of 2019, there was a bug in the main release for intronerate, so intronerate.py had to be replaced by the intronerate.py available in the dev branch of the HybPiper github. See [here] (https://github.com/mossmatters/HybPiper/issues/41). It may still be the case so better check!
+
 
 ### Gathering (supposedly) homologous regions from all samples
 After HybPiper has run, you can make a file for each target region provided in the reference file, using Matt Johnson's retrieve_sequences.py script from the HybPiper directory.  
@@ -306,13 +339,47 @@ supercontig:
 This is an ideal case when one manages to retrieve the complete target and the complete flanking region, but you may just retrieve fragments of them, or you may retrieve longer sequences than what you expect if there was an insertion in the sequenced species compared to the reference.
 
 
+
+### Cleaning the HybPiper output
+This is very important as HybPiper generates a lot of files, which can lead to millions of files as soon as a couple of hundreds of samples are analysed. See [here](https://github.com/mossmatters/HybPiper/wiki/Tutorial) and the example_scripts folder for cleaning commands. These basic commands can be directly run after you run HybPiper, as they should not prevent future data analysis/recovery.  
+
+If you are really short on space, **some additional cleaning can be performed**. Before trying this, **you should wait** to have gathered all genes and all stats that you will need (see recovery section below), as this is a bit adventurous and I am not sure if it would impact the hybpiper stats and intronerate scripts!
+You can remove the following:
+```
+Sample/Gene/*_baits.fasta (translated baits)
+Sample/Gene/Sample/exonerate_results.fasta (contigs cut by exonerate, info regarding cutting is in Sample/Gene/Sample/*_exonerate_stats.fasta, which is kept)
+Sample/Gene/Sample/supercontig_exonerate.fasta (Redundant with the sequences in exonerate_results but sometimes reverse strand)
+Sample/Gene/Sample/temp.contig.fa (reference in nucleotides)
+Sample/Gene/Sample/temp.prot.fa (reference in aa)
+```
+You should keep:
+```
+Sample/Gene/*_contigs.fasta (assembled contigs: can check for multiple copies etc
+Sample/Gene/*_interleaved and *_unpaired.fasta (reads mapped on the region: useful for remapping/checking coverage)
+Sample/Gene/Sample/sequences/FNA/*.FNA and Sample/Gene/Sample/sequences/FAA/*.FAA (final sequence selected in aa or nucl)
+Sample/Gene/Sample/*_exonerate_stats.fasta (info on where the contigs were cut by exonerate)
+```
+When using intronerate, also keep:
+```
+Sample/Gene/Sample/intronerate.gff 
+and whatever else is in:
+Sample/Gene/Sample/sequences/intron
+at least
+intron/*_supercontig.fasta
+as it is used for deep stats done with my script (HybPiper_stats_general_2.txt)
+```
+This can (should) be done in a slurm script, using the sample name list, see the example_scripts folder.
+
+
 ### Running long or heavy jobs
 Running hybpiper on many samples takes time! You should first try it on two samples to see if your commands work before submitting a long job.  
   
 The [HybPiper HPC wiki](https://github.com/mossmatters/HybPiper/wiki/HPC) has information on running on a cluster, ask your informatician.  
 If you are running HybPiper on lots of samples/genes and you have a decent size cluster available, it seems to make more sense to parallelise it as an array job over as many cpus as you have samples. This has worked well for us.  
+
+**See the example_scripts folder for an example of how to run this on a cluster using slurm.** You may want to refine this even more so that temporary files are written in a temporary location which will make the process more efficient and less space and memory consuming.
   
-The --cpu option (which takes a number of cpus to use) is useful if you don’t want to gobble all your resources: you should set it to less than the full number of cores your machine has, and ideally leave some cores for other users (see [best practices](http://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/cluster/__intro/)).
+The --cpu option (which takes a number of cpus to use) is useful if you don’t want to gobble all your resources: you should set it to less than the full number of cores your machine has, and ideally leave some cores for other users.
   
 If you are running jobs on servers that don't have a system of job submission, you can use some tool to be able to close your connection to the server while the job is still running.   
 For instance, you can use screen (official documentation [here](https://www.gnu.org/software/screen/manual/html_node/index.html)):  
@@ -346,6 +413,7 @@ echo $i
 python ~/software/HybPiper/paralog_investigator.py $i
 done < namelist.txt
 ```
+Or in a slurm script array job.
 Depending on the result you may want to discard a gene for a species or for all species.  
 This can also be a first step to identify recent whole genome duplications, or ancient gene duplications.  
 
@@ -359,14 +427,14 @@ where gene_list.txt would be the list of target genes, one per line.
 
 #### Be up to date
 Ensure that you don't miss an important update of HybPiper by consulting the website regularly.  
-Consult also this website for new solutions. And please don't hesitate to contribute!  
+Consult also this website for new solutions. And please don't hesitate to contribute to this page so that it also keeps up to date!  
   
 #### Organize yourself  
 Make folders corresponding to the different steps, and move the relevant files in them.  
 For instance you may have a folder with the raw data, a folder with the trimmed data, a folder with the output of a given HybPiper run, a folder with the final gene files...
   
 #### Tidy up  
-HybPiper provides a cleaning script cleanup.py that removes unnecessary files. In addition, after a few trials you should be able to know what files are really necessary and what files can be deleted or at least moved to an external, long storage place.  
+HybPiper provides a cleaning script that removes unnecessary files (see section above on that topic). In addition, after a few trials you should be able to know what files are really necessary and what files can be deleted or at least moved to an external, long storage place.  
   
 #### Work in a reproducible way, for you and for others  
 At least, keep track of your commands. You can consult/save the output of the **history** command, or just take notes of your commands.  
@@ -386,10 +454,11 @@ Example of command, to run from the directory where you put the HybPiper output 
 ```
 python ~/software/HybPiper/get_seq_lengths.py ReferenceTargets.fasta namelist.txt dna > seq_lengths.txt
 ```
-Replace dna by aa if the reference file contains amino-acids.
+Replace dna by aa if the reference file contains amino-acids.  
 
 The table seq_lengths.txt can then be visualized as a heatmap using Matt Johnson's script gene.recovery.heatmap.R, also available in the HybPiper directory.  
-Just open the script in R and follow the instructions at the beginning of the script.
+Just open the script in R and follow the instructions at the beginning of the script.  
+**TIP:** if you added custom references to the original reference file, you may want to modify first the table so that the second row corresponding to the reference sequence length corresponds in fact to the length of your custom references. In addition, you can reorder the genes in the table at your convenience.
 
 As an alternative to estimate the capture success, the **max_overlap** R script calculates three statistics using the output of the get_seq_lengths.py script:  
 - representedness = proportion of species and genes for which sequences were obtained
@@ -468,6 +537,8 @@ Use -ff to filter only the reads following a particular condition (see the samto
 ```
 for f in *BWA_sorted.bam; do (samtools mpileup -A -ff UNMAP -f $f -o ${f/.bam}_pileup.txt); done
 ```
+  
+We also have a more refined list of command for deeper statistics (eg exons and introns coverage etc), just ask!
 
   
 ## 7. Improving target recovery
