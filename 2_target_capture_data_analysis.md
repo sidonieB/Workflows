@@ -9,7 +9,7 @@
 - [PATH](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#path)  
 - [Hybpiper command](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#typical-command)  
 - [Retrieving the splash zone](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#retrieving-the-splash-zone)  
-- [Gathering homologous sequences from all samples](https://github.com/sidonieBWorkflows/2_target_capture_data_analysis.md#gathering-supposedly-homologous-regions-from-all-samples)  
+- [Gathering homologous sequences from all samples](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#gathering-supposedly-homologous-regions-from-all-samples)  
 - [Running long or memory-consuming jobs](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#running-long-or-heavy-jobs)  
 - [Checking for paralogs](https://github.com/sidonieB/Workflows/2_target_capture_data_analysis.md#checking-for-paralogs)  
   
