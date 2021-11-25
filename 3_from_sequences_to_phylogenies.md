@@ -32,7 +32,7 @@ parallel --eta "mafft --localpair --adjustdirectionaccurately --maxiterate 1000 
 This is just an example, look at the documentation to chose adequate options!
 Note the "--adjustdirectionaccurately" option, which reverse complement sequences if necessary.
   
-As well as running MAFFT with the GNU-Parallel command, it’s possible, as with HybPiper, to run this in parallel on a cluster as a simple array job using one CPU for each gene, for instance through slurm. See the example_scripts folder.  
+As well as running MAFFT with the GNU-Parallel command, it’s possible, as with HybPiper, to run this in parallel on a cluster as a simple array job using one CPU for each gene, for instance through slurm. See the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md).  
   
 Alternatively, for aligning big alignments MAFFt has a –thread option that can be set to the number of cores on your machine.   
 Explained [here](https://mafft.cbrc.jp/alignment/software/multithreading.html).  
