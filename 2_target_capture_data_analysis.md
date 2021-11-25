@@ -34,7 +34,7 @@ Kew has computing facilities that have been set up to enable the analysis of lar
   
 - **make yourself known** to the people managing the Kew High Performance Computing facility, and ask them for an account on the HPC.
 - **get familiar with the [facilities](https://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/kewhpc/)** 
-- **get familiar with the [slurm system](https://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/software/slurm/), which allows to submit and manage jobs on the HPC. See also the separate slurm cheat sheet.**
+- **get familiar with the [slurm system](https://rbg-kew-bioinformatics-utils.readthedocs.io/en/latest/software/slurm/), which allows to submit and manage jobs on the HPC. See also the separate [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md).**
 
 Below we provide information on our current strategies to analyse target capture data to obtain multiple sequence alignments for individual genes.  
 We also list useful software and give some default commands to use them, as well as some tips to use these software on multiple samples at once.  
@@ -85,7 +85,7 @@ At each iteration, a variable named f is created, and the object of name finishi
 "do ()" indicates an action to perform at each iteration of the loop (for instance run fastqc with the variable f as input).   
 $f indicates that f is a variable.
   
-**NB:** A loop may not be necessary if you use slurm, because you can set an array job, which means that a same job (for instance a fastqc check) will be run in parallel for as many files as you specify. See the slurm cheat sheet for more details.  
+**NB:** A loop may not be necessary if you use slurm, because you can set an array job, which means that a same job (for instance a fastqc check) will be run in parallel for as many files as you specify. See the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md) for more details.  
 
 An example of **commands to check the data quality** before or after trimming, using fastqc through Secapr:  
 ```
@@ -94,7 +94,7 @@ secapr quality_check --input data/raw/fastq/ --output data/fastqc_results/
 conda deactivate
 ```
 NB: Secapr needs to be ran in its conda environment (see doc [here](https://github.com/AntonelliLab/seqcap_processor)). So far you cannot make an array job to run secapr in parallel on all samples, but you can run two secapr jobs in parallel on the R1 files and the R2 files of many samples if you put the R1 and R2 files in separate folders. This allows to be more efficient while keeping the nice functionality of secapr, which is that it makes a graph summarising results from all samples, a functionality not available in fastqc.  
-See the example_scripts folder for an example of how to run this on a cluster using slurm.
+See the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md) for an example of how to run this on a cluster using slurm.
 
   
 **To copy files from your laptop/desktop to the remote server and vice versa, you can use the command scp**:
@@ -160,7 +160,7 @@ An example of a basic Trimmomatic command (not using MAXINFO) that worked well o
 ```
 java -jar Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 R1_file R2_file R1_Tpaired.fastq R1_Tunpaired.fastq R2_Tpaired.fastq R2_Tunpaired.fastq ILLUMINACLIP:Trimmomatic-0.39/adapters/TruSeq3-PE-2.fa:1:30:7:2:true SLIDINGWINDOW:4:30 LEADING:30 MINLEN:40
 ```
-See the example_scripts folder for an example of how to run this on a cluster using slurm.
+See the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md) for an example of how to run this on a cluster using slurm.
 
 
 **BE CAREFUL!**  
@@ -283,7 +283,7 @@ for f in *R1_001_Tunpaired.fastq; do (cat $f ${f/R1_001_Tunpaired.fastq}R2_001_T
 ```
 
 ### Typical command when using slurm
-You will not need a loop, but instead create an array job. See the example_scripts folder for an example of how to run this on a cluster using slurm.
+You will not need a loop, but instead create an array job. See the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md) for an example of how to run this on a cluster using slurm.
   
 ### Retrieving the splash zone
 You can retrieve the flanking regions of the target regions using Matt Johnson's intronerate script from the HybPiper directory.
@@ -292,7 +292,7 @@ while read name
 do python intronerate.py --prefix $name
 done < namelist.txt
 ```
-OR adapt this command for slurm as shown in the example_scripts folder for the main command.
+OR adapt this command for slurm as shown in the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md) for the main command.
 **NB:** As of 2019, there was a bug in the main release for intronerate, so intronerate.py had to be replaced by the intronerate.py available in the dev branch of the HybPiper github. See [here] (https://github.com/mossmatters/HybPiper/issues/41). It may still be the case so better check!
 
 
@@ -368,7 +368,7 @@ at least
 intron/*_supercontig.fasta
 as it is used for deep stats done with my script (HybPiper_stats_general_2.txt)
 ```
-This can (should) be done in a slurm script, using the sample name list, see the example_scripts folder.
+This can (should) be done in a slurm script, using the sample name list, see the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md).
 
 
 ### Running long or heavy jobs
@@ -377,7 +377,7 @@ Running hybpiper on many samples takes time! You should first try it on two samp
 The [HybPiper HPC wiki](https://github.com/mossmatters/HybPiper/wiki/HPC) has information on running on a cluster, ask your informatician.  
 If you are running HybPiper on lots of samples/genes and you have a decent size cluster available, it seems to make more sense to parallelise it as an array job over as many cpus as you have samples. This has worked well for us.  
 
-**See the example_scripts folder for an example of how to run this on a cluster using slurm.** You may want to refine this even more so that temporary files are written in a temporary location which will make the process more efficient and less space and memory consuming.
+**See the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md) for an example of how to run this on a cluster using slurm.** You may want to refine this even more so that temporary files are written in a temporary location which will make the process more efficient and less space and memory consuming. See the  [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md).
   
 The --cpu option (which takes a number of cpus to use) is useful if you don’t want to gobble all your resources: you should set it to less than the full number of cores your machine has, and ideally leave some cores for other users.
   
@@ -455,6 +455,7 @@ Example of command, to run from the directory where you put the HybPiper output 
 python ~/software/HybPiper/get_seq_lengths.py ReferenceTargets.fasta namelist.txt dna > seq_lengths.txt
 ```
 Replace dna by aa if the reference file contains amino-acids.  
+See also the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md) for an example.
 
 The table seq_lengths.txt can then be visualized as a heatmap using Matt Johnson's script gene.recovery.heatmap.R, also available in the HybPiper directory.  
 Just open the script in R and follow the instructions at the beginning of the script.  
@@ -475,6 +476,7 @@ python ~/software/HybPiper/hybpiper_stats.py seq_lengths.txt namelist.txt > stat
 ```
 You will need the result of the previous script (get_seq_lengths.py) first.    
 **WARNING:** if you get 50% for everything, you are probably using a wrong, outdated version of the script. Get the newest one from the HybPiper github.
+An example of slurm script will the two above commands can be found in the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md).
 
 ### Coverage of the recovered regions
 
