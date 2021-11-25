@@ -341,7 +341,7 @@ This is an ideal case when one manages to retrieve the complete target and the c
 
 
 ### Cleaning the HybPiper output
-This is very important as HybPiper generates a lot of files, which can lead to millions of files as soon as a couple of hundreds of samples are analysed. See [here](https://github.com/mossmatters/HybPiper/wiki/Tutorial) and the example_scripts folder for cleaning commands. These basic commands can be directly run after you run HybPiper, as they should not prevent future data analysis/recovery.  
+This is very important as HybPiper generates a lot of files, which can lead to millions of files as soon as a couple of hundreds of samples are analysed. See [here](https://github.com/mossmatters/HybPiper/wiki/Tutorial) and the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md) for cleaning commands. These basic commands can be directly run after you run HybPiper, as they should not prevent future data analysis/recovery.  
 
 If you are really short on space, **some additional cleaning can be performed**. Before trying this, **you should wait** to have gathered all genes and all stats that you will need (see recovery section below), as this is a bit adventurous and I am not sure if it would impact the hybpiper stats and intronerate scripts!
 You can remove the following:
