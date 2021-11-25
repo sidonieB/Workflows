@@ -115,10 +115,430 @@ NB: Each job of an array job has its own time allocation, so it is possible to r
 ## Examples of commands
 These are examples of commands used to analyse target capture data through the use of array jobs or single jobs submitted to slurm.  
 "PATH/PATH" has to be replaced by the true path in your situation.  
-The commands will need to be adapted to your situation/dataset!
+The commands will need to be adapted to your situation/dataset!  
+The commands need to be preceded by the right instructions for slurm, and, if relevant, by the array job ID specification and $name variable setting as shown above. 
+
+Example with all that for FASTQC:
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/directory
+#SBATCH --job-name=fastqc
+#SBATCH --partition=short
+#SBATCH --array=1-6
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --mail-user=xxx@zzz.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/names_root.txt) 
+
+echo $name
+
+/PATH/PATH/apps/FastQC/fastqc "$name".fastq
 
 ```
 
+Unzip files:
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/directory
+#SBATCH --job-name=fastqc
+#SBATCH --partition=short
+#SBATCH --array=1-6
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --mail-user=xxx@zzz.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/names_root.txt)
+
+echo $name
+
+gunzip "$name".fastq.gz
+```
+
+
+Run Trimmomatic as an array job on 3 samples
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/directory
+#SBATCH --job-name=trimmomatic
+#SBATCH --partition=medium
+#SBATCH --array=1-3
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G      # test and decrease if too much
+#SBATCH --mail-user=xxxx@zzzz.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/names_root.txt)
+
+echo $name
+
+java -jar /PATH/PATH/apps/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /PATH/PATH/"$name"___R1.fastq /PATH/PATH/"$name"___R2.fastq "$name"___R1_Tpaired.fastq "$name"___R1_Tunpaired.fastq "$name"___R2_Tpaired.fastq "$name"___R2_Tunpaired.fastq ILLUMINACLIP:../../../../../apps/Trimmomatic-0.39/adapters/TruSeq3-PE-2.fa:1:30:7:2:true SLIDINGWINDOW:4:30 LEADING:30 MINLEN:40
+
+# IMPORTANT: It seems that the path to the adapter file in the command above has to be given relative to the working directory (i.e. the directory specified with --chdir in the script header), instead of being an absolute path.
+
+```
+
+
+
+
+
+Run Secapr on all R1 files to get a plot summarizing their quality (one can do the same with the R2 files in parallel)
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/R1 # folder containing only the R1 files
+#SBATCH --job-name=secaprQC
+#SBATCH --partition=medium
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=16G   # decrease/test as appropriate
+#SBATCH --mail-user=xxxx@xxx.org
+#SBATCH --mail-type=END,FAIL
+
+
+source activate secapr_env
+secapr quality_check --input /PATH/PATH/R1/ --output /PATH/PATH/R1_QC_postT/
+conda deactivate
+
+```
+
+
+
+Run Hybpiper on 1 sample
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/directory/
+#SBATCH --job-name=hybpiper
+#SBATCH --partition=short       
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=8G
+#SBATCH --mail-user=xxxx@zzzz.org
+#SBATCH --mail-type=END,FAIL
+
+
+export PATH=$PATH:/PATH/PATH/apps/ncbi-blast-2.10.1+/bin/
+export PATH=$PATH:PATH/PATH/apps/SPAdes-3.14.1-Linux/bin/
+export PATH=$PATH:/PATH/PATH/apps/samtools-1.11/bin/bin/
+export PATH=$PATH:/PATH/PATH/apps/exonerate-2.2.0-x86_64/bin/
+export PATH=$PATH:/PATH/PATH/apps/bwa-0.7.17/
+
+/PATH/PATH/apps/HybPiper/reads_first.py -b PATH/PATH/Reference_file.fasta -r Sample_R*_Tpaired.fastq --unpairedSample_Tunpaired.fastq --prefix Sample --bwa --cov_cutoff 5
+
+python /PATH/PATH/apps/HybPiper/cleanup.py Sample
+```
+
+Run HybPiper on 1 sample using the SSD for temporary storage and moving the output back to the permanent directory
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/directory/
+#SBATCH --job-name=hybpiper
+#SBATCH --partition=short       
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=8G
+#SBATCH --mail-user=xxxx@zzzz.org
+#SBATCH --mail-type=END,FAIL
+
+cd $TMPDIR     # IMPORTANT CHANGE
+
+export PATH=$PATH:/PATH/PATH/apps/ncbi-blast-2.10.1+/bin/
+export PATH=$PATH:PATH/PATH/apps/SPAdes-3.14.1-Linux/bin/
+export PATH=$PATH:/PATH/PATH/apps/samtools-1.11/bin/bin/
+export PATH=$PATH:/PATH/PATH/apps/exonerate-2.2.0-x86_64/bin/
+export PATH=$PATH:/PATH/PATH/apps/bwa-0.7.17/
+
+/PATH/PATH/apps/HybPiper/reads_first.py -b PATH/PATH/Reference_file.fasta -r Sample_R*_Tpaired.fastq --unpairedSample_Tunpaired.fastq --prefix Sample --bwa --cov_cutoff 5
+
+python /PATH/PATH/apps/HybPiper/cleanup.py Sample
+
+mv Sample /PATH/PATH/directory      # IMPORTANT CHANGE
+```
+
+Run HybPiper on many samples using an array job
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/directory/
+#SBATCH --job-name=hybpiper
+#SBATCH --partition=medium      
+#SBATCH --array=1-207%50   
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=8G
+#SBATCH --mail-user=xxxx@zzzz.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/HP_hybseq_names.txt)
+
+echo $name
+
+export PATH=$PATH:/PATH/PATH/apps/ncbi-blast-2.10.1+/bin/
+export PATH=$PATH:PATH/PATH/apps/SPAdes-3.14.1-Linux/bin/
+export PATH=$PATH:/PATH/PATH/apps/samtools-1.11/bin/bin/
+export PATH=$PATH:/PATH/PATH/apps/exonerate-2.2.0-x86_64/bin/
+export PATH=$PATH:/PATH/PATH/apps/bwa-0.7.17/
+
+/PATH/PATH/apps/HybPiper/reads_first.py -b PATH/PATH/Reference_file.fasta -r "$name"_R*_Tpaired.fastq --unpaired "$name"_Tunpaired.fastq --prefix $name --bwa --cov_cutoff 5
+
+python /PATH/PATH/apps/HybPiper/cleanup.py $name
+
+```
+
+Run HybPiper on many samples using an array job using the SSD for temporary storage and moving the output back to the permanent directory:
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/directory/
+#SBATCH --job-name=hybpiper
+#SBATCH --partition=medium      
+#SBATCH --array=1-207%50   
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=8G
+#SBATCH --mail-user=xxxx@zzzz.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/HP_hybseq_names.txt)
+
+echo $name
+
+export PATH=$PATH:/PATH/PATH/apps/ncbi-blast-2.10.1+/bin/
+export PATH=$PATH:PATH/PATH/apps/SPAdes-3.14.1-Linux/bin/
+export PATH=$PATH:/PATH/PATH/apps/samtools-1.11/bin/bin/
+export PATH=$PATH:/PATH/PATH/apps/exonerate-2.2.0-x86_64/bin/
+export PATH=$PATH:/PATH/PATH/apps/bwa-0.7.17/
+
+cd $TMPDIR
+
+/PATH/PATH/apps/HybPiper/reads_first.py -b PATH/PATH/Reference_file.fasta -r "$name"_R*_Tpaired.fastq --unpaired "$name"_Tunpaired.fastq --prefix $name --bwa --cov_cutoff 5
+
+python /PATH/PATH/apps/HybPiper/cleanup.py $name
+
+mv $name /PATH/PATH/HP_out
+
+```
+
+
+Get sequences assembled by HybPiper from all samples, get sequence lengths from the HybPiper output to assess gene recovery and make a heatmap, and get some stats
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/HP_out
+#SBATCH --job-name=HPgetSeqs
+#SBATCH --partition=medium      ## may need medium if many species
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=4G
+#SBATCH --mail-user=xxxx@zzzz.orgg
+#SBATCH --mail-type=END,FAIL
+
+python /PATH/PATH/apps/HybPiper/retrieve_sequences.py /PATH/PATH/Reference_file.fasta /PATH/PATH/HP_out dna
+
+python /PATH/PATH/apps/HybPiper/get_seq_lengths.py /PATH/PATH/Reference_file.fasta /PATH/PATH/All_names_207.txt dna > /PATH/PATH/HP_207_seq_lengths.txt
+
+python /PATH/PATH/apps/HybPiper/hybpiper_stats_MODIFsamtoolsCMD.py /PATH/PATH/HP_207_seq_lengths.txt /PATH/PATH/All_names_207.txt > /PATH/PATH/HP_207_stats.txt
+```
+
+
+Additional cleaning of HybPiper output files, more stringent. **CAREFUL, read [instructions](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#cleaning-the-hybpiper-output) and understand the commands below before you try it!**
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/HP_out
+#SBATCH --job-name=HPclean2
+#SBATCH --partition=medium      ## may need medium if many species
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=4G
+#SBATCH --mail-user=xxxx@zzzz.orgg
+#SBATCH --mail-type=END,FAIL
+
+while read name
+do
+rm -f $name/*/*_baits.fasta
+rm -f $name/*/$name/exonerate_results.fasta
+rm -f $name/*/$name/supercontig_exonerate.fasta
+rm -f $name/*/$name/temp.contig.fa
+rm -f $name/*/$name/temp.prot.fa
+done < /PATH/PATH/All_names_207.txt
+
+```
+
+Run MAFFT to align sequences
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/not_aligned
+#SBATCH --job-name=mafft
+#SBATCH --partition=medium      ## ok if one species takes less than 6 hours, otherwise use medium
+#SBATCH --array=1-1211%32       ### change by your number of jobs!!!
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=4G
+#SBATCH --mail-user=zzz@xxx.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/Gene_names.txt)
+
+echo $name
+
+mafft --thread 8 --genafpair --adjustdirectionaccurately --maxiterate 1000 "$name".fasta > "$name"_alM.fasta
+```
+
+Run TAPER to clean the alignments
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/alignments
+#SBATCH --job-name=taper
+#SBATCH --partition=short       ## ok if one species takes less than 6 hours, otherwise use medium
+#SBATCH --array=1-1211%32       ### change by your number of jobs!!!
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=2G
+#SBATCH --mail-user=xxxx@zzzz.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/Gene_names_L.txt)
+
+echo $name
+
+/PATH/PATH/apps/julia-1.6.2/bin/julia /PATH/PATH/apps/TAPER-master/correction_multi.jl -m N -a N "$name"_alM_r.fasta > "$name"_alM_r_cT.fasta
+
+```
+
+Basic script to run any custom python script as a loop, for instance to further clean/filter alignments. Could also do it in an array.
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/alignments
+#SBATCH --job-name=cleaning
+#SBATCH --partition=short       ## ok if one species takes less than 6 hours, otherwise use medium
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=2G
+#SBATCH --mail-user=xxxx@zzzz.org
+#SBATCH --mail-type=END,FAIL
+
+for f in *.fasta; do (python /PATH/PATH/apps/scripts/Script.py $f ${f/.fasta}_clean.fasta xxxx options as required); done
+
+```
+
+
+Run IQtree to chose the best substitution model (later used to set up RAxML)
+```
+
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/alignments
+#SBATCH --job-name=iqtree
+#SBATCH --partition=short       ## ok if one species takes less than 6 hours, otherwise use medium
+#SBATCH --array=1-1161%50       ### change by your number of jobs!!!
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=2G
+#SBATCH --mail-user=zzzz@xxxx.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/Gene_names.txt)
+
+echo $name
+
+/PATH/PATH/apps/iqtree-1.6.12-Linux/bin/iqtree -s "$name".fasta -m MF -AICc -mset JC69,HKY85,GTR,K80 -nt AUTO -ntmax 2
+```
+
+Run IQtree to get a tree and 500 standard bootstrap replicates (very long if using standard BP):  
+To use the Ultrafast bootstrap, replace -b by -B (check command on the [IQtree website](http://www.iqtree.org/)!)
+
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/alignments
+#SBATCH --job-name=iqtree
+#SBATCH --partition=short       ## ok if one species takes less than 6 hours, otherwise use medium
+#SBATCH --array=1-1161%50       ### change by your number of jobs!!!
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=2G
+#SBATCH --mail-user=zzzz@xxxx.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/Gene_names.txt)
+
+echo $name
+
+/PATH/PATH/apps/iqtree-1.6.12-Linux/bin/iqtree -s "$name".fasta -m MFP -AICc -b 500 -nt AUTO -ntmax 8
+```
+
+
+Run RAxML to get gene trees with 500 bootstrap replicates:
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/alignments
+#SBATCH --job-name=raxml
+#SBATCH --partition=medium      ## ok if one species takes less than 6 hours, otherwise use medium
+#SBATCH --array=1-787%50        ### change by your number of jobs!!!
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8       ### This has to fit with the -T parameter in the command below!!!
+#SBATCH --mem=4G
+#SBATCH --mail-user=xxx@zzz.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/Gene_names.txt)
+
+echo $name
+
+raxmlHPC-PTHREADS -T 8 -m GTRGAMMA -f a -p 2345 -x 2345 -# 500 -k -s "$name".fasta -n "$name"_tree
+```
+
+
+
+
+Run ASTRAL (combine gene trees, collapse branches with less than 10% bootstrap support, run astral with and without annoations, root the species trees and format it for plotting in R):
+```
+while read name
+do cat RAxML_bipartitions."$name"_alM_r_g_tree >> CDS_alM_r_g_c0all_trees.tre && echo "" >> CDS_alM_r_g_c0all_trees.tre
+done < /PATH/PATH/c0all_names2.txt
+
+/PATH/PATH/apps/newick-utils-1.6/src/nw_ed CDS_alM_r_g_c0all_trees.tre 'i & b<=10' o > CDS_alM_r_g_c0all_trees_BP10.tre
+java -jar /PATH/PATH/apps/Astral/astral.5.7.5.jar -i CDS_alM_r_g_c0all_trees_BP10.tre -t 2 -o CDS_alM_r_g_c0all_trees_BP10_SpeciesTree_annotQ.tre
+java -jar /PATH/PATH/apps/Astral/astral.5.7.5.jar -i CDS_alM_r_g_c0all_trees_BP10.tre -t 0 -o CDS_alM_r_g_c0all_trees_BP10_SpeciesTree.tre
+pxrr -t CDS_alM_r_g_c0all_trees_BP10_SpeciesTree.tre -g Dasypogon_bromeliifolius > CDS_alM_r_g_c0all_trees_BP10_SpeciesTree_rooted.tre
+pxrr -t CDS_alM_r_g_c0all_trees_BP10_SpeciesTree_annotQ.tre -g Dasypogon_bromeliifolius > CDS_alM_r_g_c0all_trees_BP10_SpeciesTree_annotQ_rooted.tre
+sed 's/\;\n/\;\r\n/' CDS_alM_r_g_c0all_trees_BP10_SpeciesTree_rooted.tre > CDS_alM_r_g_c0all_trees_BP10_SpeciesTree_rooted2.tre
+sed 's/\;\n/\;\r\n/' CDS_alM_r_g_c0all_trees_BP10_SpeciesTree_annotQ_rooted.tre > CDS_alM_r_g_c0all_trees_BP10_SpeciesTree_annotQ_rooted2.tre
 
 ```
 
