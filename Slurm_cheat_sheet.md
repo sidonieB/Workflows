@@ -1,5 +1,5 @@
 # Slurm tips
-Slurm is a system that manages the jobs submitted by users to a High Performance Computing facility. See more explanations [here](https://slurm.schedmd.com/overview.html). There is a lot of information but you will benefit from taking some time to read it.
+Slurm is a system that manages the jobs submitted by users to a High Performance Computing facility. See more explanations [here](https://help.cropdiversity.ac.uk/slurm-overview.html) and [here](https://slurm.schedmd.com/overview.html). There is a lot of information but you will benefit from taking some time to read it.
 
 ## Interactive mode  
 Although most jobs will be run in the background, it can be useful to also use slurm to run short tasks. Typically, these are the tasks that you would usually just run on the front node of the HPC, without bothering to submit them as a job. However, even small and short tasks can be too much for a front node, especially if many users are using it, and depending on how it is configured. So it is good practice to also run these through slurm using the interactive mode, and specifying only a very low amount of memory and cpu (as appropriate for your task).  
@@ -68,7 +68,8 @@ echo $name
 Slurm will not occupy a CPU with two threads from a different job or from a different task of a same job, so it is unefficient to specify an odd number in --cpu-per-task since the remaining thread with not be used.
 
 
-## Obtain information on a job
+## Obtain information on a job  
+Pasted/adpted from [here](https://help.cropdiversity.ac.uk/slurm-overview.html).
 
 Check if the job is running and what other jobs are running/pending:
 
@@ -80,17 +81,17 @@ Details on the job:
 ```
 sacct -j <jobid> --units=G --format JobID,MaxVMSize,MaxRSS,NodeList,AllocCPUS,TotalCPU,State,Start,End
 ```
-
-JobID - the ID of the job
-MaxVMSize - how much memory the job requested, but did not necessarily fill up (including any swap usage)
-MaxRSS - the maximum real memory used by the job
-NodeList - the compute node that ran the job
-AllocCPUS - how many CPUs were allocated
-TotalCPU - the total CPU time used by the job, which will often be less than the runtime, especially if the job spent time waiting on user interaction or disk I/O
-State - the job’s exit state (failed or completed, etc)
-Start - start time of the job
-End - end time of the job
-
+  
+JobID - the ID of the job  
+MaxVMSize - how much memory the job requested, but did not necessarily fill up (including any swap usage)  
+MaxRSS - the maximum real memory used by the job  
+NodeList - the compute node that ran the job  
+AllocCPUS - how many CPUs were allocated  
+TotalCPU - the total CPU time used by the job, which will often be less than the runtime, especially if the job spent time waiting on user interaction or disk I/O  
+State - the job’s exit state (failed or completed, etc)  
+Start - start time of the job  
+End - end time of the job  
+  
 To see the node usage
 ```
 snodes
@@ -100,6 +101,12 @@ To just see when the job is likely to start:
 ```
 sbatch --test-only slurm_script.sh
 ```
+
+To cancel a job:
+```
+scancel <jobid>
+```
+
 
 **Important!**  
 - On the cluster we use, short and medium queues will automatically kill a job if it exceeds their limits (6 and 24 hours respectively). 
