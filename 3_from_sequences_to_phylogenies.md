@@ -77,9 +77,13 @@ trimal -in concatenated.out -out concat_trimmalled.fas -automated -resoverlap 0.
 
 Another suite of tools to perform similar tasks and many others is [phyutility](https://github.com/blackrim/phyutility).  
 
-Trimming can sometimes result in loss of informativeness. It may be worthwhile to check that the trimming parameters did not actually make things worse. For example, one can use our **optrimAl** R script (+ pasta_taster bash script), which uses [AMAS](https://github.com/marekborowiec/AMAS) to explore the effect of different trimAl gap threshold values on the proportion of parsimony informative sites and amount of data loss.
+Trimming can sometimes result in loss of informativeness. It may be worthwhile to check that the trimming parameters did not actually make things worse. For example, one can use our [**optrimAl**](https://github.com/keblat/bioinfo-utils/blob/master/docs/advice/scripts/optrimAl.txt) R script (+ pasta_taster bash script), which uses [AMAS](https://github.com/marekborowiec/AMAS) to explore the effect of different trimAl gap threshold values on the proportion of parsimony informative sites and amount of data loss.
 
 [TAPER](https://github.com/chaoszhang/TAPER) is the only tool we know so far that can remove spurious bits in individual sequences. It is not perfect though and only the default settings seem to work as expected.  
+  
+[CIAlign](https://github.com/KatyBrown/CIAlign) can trim alignment columns and rows based on various criteria. It is especially a great tool to remove sequences that are completely spurious, which will be detected based on how different they are from the rest of the sequences. It is even possible to specify sequences to keep regardless of how different they are, for instance an outgroup sequence.  
+  
+We found that using OptrimAl, CIAlign, TAPER, and again OptrimAl gave good results.
 
 ### Renaming sequences in all alignments
   
