@@ -1,7 +1,7 @@
 # **Phylogenomics tips**
 
 [1. Multiple sequence alignments](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#1-multiple-sequence-alignments)  
-[2. Concatenate alignments]
+[2. Concatenate alignments](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#2-concatenate-alignments)
 [3. Spotting alignment issues and cleaning alignments]
 [4. Estimating gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#2-gene-trees)  
 [5. Spotting alignment problems by observing gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#3-spotting-alignment-problems)  
