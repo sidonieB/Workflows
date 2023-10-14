@@ -1,16 +1,17 @@
-# **Phylogenomics tips**
+# **Phylogenomics Tutorial**
 
 [1. Multiple sequence alignments](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#1-multiple-sequence-alignments)  
-[2. Concatenate alignments](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#2-concatenate-alignments)
-[3. Spotting alignment issues and cleaning alignments]
-[4. Estimating gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#2-gene-trees)  
-[5. Spotting alignment problems by observing gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#3-spotting-alignment-problems)  
-[6. Infering a species tree with ASTRAL](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#4-infer-species-tree-with-astral)  
-[7. Rooting trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#5-rooting-trees)  
-[8. Estimating confidence in the tree and clades](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#6-calculate-support)  
-[9. Dating divergence times](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#8-dating-divergence-times)  
+[2. Concatenate alignments](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#2-concatenate-alignments)  
+[3. Spot alignment issues and clean alignments](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#3-spot-alignment-issues-and-clean-alignments)  
+[4. Estimate gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#4-estimate-gene-trees)  
+[5. Spot alignment problems by observing gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#5-spot-alignment-problems-by-observing-gene-trees)  
+[6. Infer a species tree with ASTRAL](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#6-infer-a-species-tree-with-astral)  
+[7. Root trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#7-rooting-trees)  
+[8. Estimate confidence in the tree and clades](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#8-estimate-confidence-in-the-tree-and-clades)  
+[9. Date divergence times](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#9-date-divergence-times)  
 
 
+  
 ## **1. Multiple sequence alignments**
 There are many different programs to align sequences.  
 None of them is guarantied to find the optimal alignment.  
@@ -78,7 +79,7 @@ AMAS.py does some other useful things including giving a summary of an alignment
 python3  AMAS.py summary -i alignment.fasta -f fasta -d dna
 ```
 
-## **3. Spotting alignment issues and cleaning alignments**
+## **3. Spot alignment issues and clean alignments**
   
 It is often a good idea to spend some time looking at your alignments.  
 [FluentDNA](https://github.com/josiahseaman/FluentDNA) allows to look at many alignments and visually spot abnormalities, changes in nucleotide frequencies etc.  
@@ -147,15 +148,15 @@ Basic TAPER command (it requires julia):
 **We found that using OptrimAl, CIAlign, TAPER, and again OptrimAl gave satisfactorily clean alignments without excessive loss of data**  
 
 
-#### Renaming sequences in all alignments
+#### Rename sequences in all alignments
   
 We have scripts for that, just ask!
 
 
   
-## **4. Estimating gene trees**
+## **4. Estimate gene trees**
 
-### Selecting an appropriate model of nucleotide substitution
+### Select an appropriate model of nucleotide substitution
   
 This can be done efficiently in [IQtree](http://www.iqtree.org/) and the model chosen can then be indicated to [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/), or in [raxml-ng](https://github.com/amkozlov/raxml-ng), which perform the "standard" (not ultrafast) bootstrap more quickly than IQtree.  
 Alternatively, both model selection and gene tree estimation can be performed in IQtree, including bootstrap or ultrafast bootstrap support values estimations. The standard bootstrap estimation may take a very long time if done in IQtree.  
@@ -167,7 +168,7 @@ Basic IQtree command to select a nucleotide substitution model:
 Check the great documentation to make sure this fits your situation!  
 
   
-### Editing and interpreting the output of IQtree to use it in raxml
+### Edit and interpret the output of IQtree to use it in raxml
   
 This is a set of instructions to retrieve the best model of substitution selected by IQtree for a set of genes, and make a list of the gene names and a separate list of the corresponding model of substitution, in a format understood by raxml-ng.  
   
@@ -255,7 +256,7 @@ Basic IQtree command to select a model of nucleotide substitution, and make a tr
 /PATH/iqtree-1.6.12-Linux/bin/iqtree -s alignment.fasta -nt AUTO -ntmax 2 -bb 1000
 ```
   
-## **5. Spotting alignment problems by observing gene trees**
+## **5. Spot alignment problems by observing gene trees**
 
 When you have hundreds of alignments, looking at all of them to spot wrong alignments or weird sequences becomes difficult, so people are developping tools to spot problems automatically.  
 
@@ -266,7 +267,7 @@ U. Mai and S. Mirarab's [Treeshrink](https://github.com/uym2/TreeShrink) to do t
 If you can have a look at your alignments don't hesitate though...  
 
 
-## **6. Infering a species tree with ASTRAL**
+## **6. Infer a species tree with ASTRAL**
 
 Taxa names have to be the same in all trees (but you can have missing taxa).  
 
@@ -310,7 +311,7 @@ The ASTRAL option ```-t 10``` does a polytomy test and may help in assessing if 
 
 
 
-## **7. Rooting trees**
+## **7. Root trees**
 
 **WARNING!** If you use phyparts (see below) or more generally if you have to compare gene trees to your species tree, it is important that the same rooting method is applied to all trees.
 
@@ -362,9 +363,9 @@ Ensure that the end of all rooted gene trees has a ";" and that it finishes with
 for f in *.tre; do (sed 's/\;\n/\;\r\n/' $f > ${f/.tre}2.tre); done
 ```
 
-## **8. Estimating confidence in the tree and clades**
+## **8. Estimate confidence in the tree and clades**
 
-### Displaying ASTRAL support values on the tree
+### Display ASTRAL support values on the tree
   
 ASTRAL provides various measures of clade or bipartition [support](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support).  
 They can be displayed on the tree using [Figtree](http://tree.bio.ed.ac.uk/software/figtree/) or custom R scripts.  
@@ -374,7 +375,7 @@ To interpret the support values provided by Astral, look at [S. Mirarab](https:/
 [DiscoVista](https://github.com/esayyari/DiscoVista) can help you explore conflicts among gene trees, quartet by quartet.  
 
 
-### Displaying bipartition support values on the tree using Phyparts
+### Display bipartition support values on the tree using Phyparts
 
 You can also use [phyparts](https://bitbucket.org/blackrim/phyparts) to obtain a measure of the support for each bipartition in the tree.  
   
@@ -415,6 +416,6 @@ The ""xvfb-run" is sometimes necessary if you run it remotely, but not needed if
 
 
 
-## 9. Dating divergence times
+## 9. Date divergence times
 
 **DO NOT** use ASTRAL branch lengths (see S. Mirarab [github](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support) for explanations and for coming-soon approach to date phylogenomic datasets)
