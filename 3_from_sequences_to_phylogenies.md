@@ -1,16 +1,17 @@
 # **Phylogenomics tips**
 
-[Multiple sequence alignments](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#1-multiple-sequence-alignments)  
-[Gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#2-gene-trees)  
-[Spotting alignment problems by observing gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#3-spotting-alignment-problems)  
-[Species tree estimation using ASTRAL](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#4-infer-species-tree-with-astral)  
-[Rooting trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#5-rooting-trees)  
-[Calculate clade support](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#6-calculate-support)  
-[Visualize support](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#7-visualize-support-on-the-species-tree)  
-[Dating divergence times](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#8-dating-divergence-times)  
+[1. Multiple sequence alignments](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#1-multiple-sequence-alignments)  
+[2. Concatenate alignments]
+[3. Spotting alignment issues and cleaning alignments]
+[4. Estimating gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#2-gene-trees)  
+[5. Spotting alignment problems by observing gene trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#3-spotting-alignment-problems)  
+[6. Infering a species tree with ASTRAL](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#4-infer-species-tree-with-astral)  
+[7. Rooting trees](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#5-rooting-trees)  
+[8. Estimating confidence in the tree and clades](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#6-calculate-support)  
+[9. Dating divergence times](https://github.com/sidonieB/Workflows/blob/main/3_from_sequences_to_phylogenies.md#8-dating-divergence-times)  
 
 
-## **1. Multiple Sequence Alignments**
+## **1. Multiple sequence alignments**
 There are many different programs to align sequences.  
 None of them is guarantied to find the optimal alignment.  
 Performance depends on your data and how you tune the parameters.
@@ -64,8 +65,9 @@ UPP produces more accurate alignments than MAFFT or PASTA in the case of fragmen
 UPP splits the data set into more fragmented and less fragmented sequences. It then produces a backbone alignment and Hidden Markov Models (HMM) from the less fragmented sequences and attempts to fit the more fragmented sequences into each HMM. The final alignment is then selected from the best supported HMM.  
 If the range of sequence lengths is highly variable or most of your fragments are much shorter than the target reference sequence, you can use the UPP ```-M``` option, and you may need to specify something like "95th percentile of all sequence lengths in data set" as input for this option.
 
-## **2. Concatenate alignments (if needed)**
+## **2. Concatenate alignments**
 
+This can be useful in some cases, for instance to concatenate coding and non-coding sequences of the same gene into a single alignment.  
 We know of two command line tools: [FASconCAT-G](https://github.com/PatrickKueck/FASconCAT-G) and [AMAS](https://github.com/marekborowiec/AMAS). The latter seems more robust to big alignments.
 The command to run AMAS is:
 ```
@@ -76,7 +78,7 @@ AMAS.py does some other useful things including giving a summary of an alignment
 python3  AMAS.py summary -i alignment.fasta -f fasta -d dna
 ```
 
-## **3. Spotting alignment problems and trimming alignments**
+## **3. Spotting alignment issues and cleaning alignments**
   
 It is often a good idea to spend some time looking at your alignments.  
 [FluentDNA](https://github.com/josiahseaman/FluentDNA) allows to look at many alignments and visually spot abnormalities, changes in nucleotide frequencies etc.  
@@ -151,7 +153,7 @@ We have scripts for that, just ask!
 
 
   
-## **4. Estimating Gene trees**
+## **4. Estimating gene trees**
 
 ### Selecting an appropriate model of nucleotide substitution
   
@@ -264,7 +266,7 @@ U. Mai and S. Mirarab's [Treeshrink](https://github.com/uym2/TreeShrink) to do t
 If you can have a look at your alignments don't hesitate though...  
 
 
-## **6. Infer a species tree with ASTRAL**
+## **6. Infering a species tree with ASTRAL**
 
 Taxa names have to be the same in all trees (but you can have missing taxa).  
 
@@ -360,7 +362,7 @@ Ensure that the end of all rooted gene trees has a ";" and that it finishes with
 for f in *.tre; do (sed 's/\;\n/\;\r\n/' $f > ${f/.tre}2.tre); done
 ```
 
-## **8. Estimate confidence in the tree and clades**
+## **8. Estimating confidence in the tree and clades**
 
 ### Displaying ASTRAL support values on the tree
   
