@@ -169,8 +169,7 @@ Check the great documentation to make sure this fits your situation!
   
 This is a set of instructions to retrieve the best model of substitution selected by IQtree for a set of genes, and make a list of the gene names and a separate list of the corresponding model of substitution, in a format understood by raxml-ng.  
   
-**Extract the best model from all IQtree output files**
-- From the folder containing the IQtree outputs, run:
+- Extract the best model from all IQtree output files: from the folder containing the IQtree outputs, run:
 ```
 ls *.log > file_names.txt
 while read f; do grep "Best-fit model" $f; done < file_names.txt >> models.txt
@@ -212,8 +211,10 @@ This will enable to run raxml-ng on all genes in an array job, picking the right
 
 
 ### Gene tree estimation using maximum likelihood
+
+### RAxML  
   
-We often use RAxML, see full documentation [here](https://sco.h-its.org/exelixis/web/software/raxml/) to understand the options.  
+We often use [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/), see full documentation [here](https://cme.h-its.org/exelixis/resource/download/NewManual.pdf) to understand the options.  
 Example of command to get gene trees with 100 bootstrap replicates, with branch lengths in the bootstrap files (option -k):
 ```
 for f in *.fasta; do (raxmlHPC-PTHREADS -m GTRGAMMA -f a -p 12345 -x 12345 -# 100 -k -s $f -n ${f}_tree -T 4); done
@@ -228,8 +229,9 @@ For concatenated alignments RaxML can also be run in MPI mode, or in HYBRID mode
   
 The trees to be used for species tree estimation with ASTRAL (see below) are the RAxML_bipartitions.* trees, NOT the RAxML_bipartitionsBranchLabels.* trees.
 
+### raxml-ng  
 
-For genomic datasets, raxml-ng may be a more efficient option.  It seems to be more accurate and quick than RAxML.  
+For genomic datasets, [raxml-ng](https://github.com/amkozlov/raxml-ng) may be a more efficient option.  It seems to be more accurate and quick than RAxML.  
 Basic raxml-ng command:
 ```
 raxml-ng --all --msa alignment.fasta --model model --bs-trees 100 --threads auto{8} --tree pars{30},rand{30} --seed 1 --prefix prefix
@@ -243,6 +245,9 @@ Above, "prefix" is for instance the name of the gene, and "model" is the desired
   
 Another accurate option is [IQ-Tree](http://www.iqtree.org/) but the ultra-fast bootstrap is less accurate and its standard bootstrap takes much more time to compute than when done in RAxML.
 
+### IQtree  
+  
+[IQtree](http://www.iqtree.org/) is also a great option:  
 Basic IQtree command to select a model of nucleotide substitution, and make a tree with 1000 ultrafast bootstrap replicates:  
 ```
 /PATH/iqtree-1.6.12-Linux/bin/iqtree -s alignment.fasta -nt AUTO -ntmax 2 -bb 1000
@@ -263,7 +268,7 @@ If you can have a look at your alignments don't hesitate though...
 
 Taxa names have to be the same in all trees (but you can have missing taxa).  
 
-Combine all species tree files in one file with the **cat** command: 
+Combine all gene tree files in one file with the **cat** command: 
 Example for raxml-ng:
 ```
 while read name
@@ -273,7 +278,8 @@ done < gene_names.txt
 Above, gene_names.txt contains the names of the genes you want to use to make the species tree. 
 
   
-We use ASTRAL-III (version 5.1.1 and above). See the article [here](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2129-y) and ASTRAL documentation [here](https://github.com/smirarab/ASTRAL).  However, a better option may be Weighted Astral, i.e. [wASTRAL](https://github.com/chaoszhang/ASTER/blob/master/tutorial/astral-hybrid.md), part of the ASTER suite, because it gives a higher weight to clades with higher bootstrap support values, thereby limiting the negative impact that gene tree error has on ASTRAL.  
+We have mainly been using ASTRAL-III (version 5.1.1 and above). See the article [here](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2129-y) and ASTRAL documentation [here](https://github.com/smirarab/ASTRAL).  
+However, a better option may be Weighted Astral, i.e. [wASTRAL](https://github.com/chaoszhang/ASTER/blob/master/tutorial/astral-hybrid.md), part of the ASTER suite, because it gives a higher weight to clades with higher bootstrap support values, thereby limiting the negative impact that gene tree error has on ASTRAL.  
   
 When using ASTRAL-III, it is better to collapse very low support branches in the gene trees before running ASTRAL.  
 It can be done with newick utilities in the following way (for branches with less than 10% bootstrap):  
@@ -283,7 +289,7 @@ It can be done with newick utilities in the following way (for branches with les
 Do not over collapse! S. Mirarab's work shows that using a threshold of 10 to 33% of bootstrap support to collapse clades results in less errors in the species tree than inferior or superior thresholds.  
   
   
-To run Astral with the -t 0 option, and get the species tree from the stdout, without any annotations or branch lengths:
+To run Astral with the -t 0 option, and get the species tree without any annotations or branch lengths:
 ```
 java -Xmx12000M -jar ~/software/ASTRAL/astral.5.5.9.jar -i all_trees-BS10.tre -t 0 -o SpeciesTree.tre
 ```
@@ -298,7 +304,9 @@ To run Astral with all annotations:
 java -jar /PATH/astral.5.7.5.jar -i all_trees-BS10.tre -t 2 -o SpeciesTree_annotQ.tre
 ```
 
-The ASTRAL option ```-t 10``` does a polytomy test and may help in assessing if a short branch could reflect insufficient data or be due to a true polytomy. See the corresponding paper [here](https://arxiv.org/abs/1708.08916).
+The ASTRAL option ```-t 10``` does a polytomy test and may help in assessing if a short branch could reflect insufficient data or be due to a true polytomy. See the corresponding paper [here](https://arxiv.org/abs/1708.08916).  
+
+
 
 ## **7. Rooting trees**
 
@@ -322,11 +330,10 @@ sed 's/\;\n/\;\r\n/' SpeciesTree_PxrrRooted.tre > SpeciesTree_PxrrRooted_formate
 ### Root many gene trees at once
 
 You can also use the pxrr command from [phyx](https://github.com/FePhyFoFum/phyx) to root multiple trees at once, and it is also relatively flexible when you need to use multiple outgroups. See the documentation [here](https://github.com/FePhyFoFum/phyx/wiki/Program-list).  
-Examples of this flexibility are welcome!
   
 If you have multiple and different outgroups per gene tree, and some risk that your outgroups may not be monophyletic in some trees, you can also use our custom R script to generate the adequate command for pxrr for each tree, and then run all commands at once. 
 
-This R script, called root_tree_general_pxrr_v2.R, will generate a command to root each tree on the first preferred taxon that is available.
+This R script, called root_tree_general_pxrr_vx.R, will generate a command to root each tree on the first preferred taxon that is available.
 Input for the script:  
 Based on your species tree, create a list with the outgroups, for instance called outgroups.txt. Ensure that:
 - Each outgroup is on a separate line
@@ -355,63 +362,57 @@ for f in *.tre; do (sed 's/\;\n/\;\r\n/' $f > ${f/.tre}2.tre); done
 
 ## **8. Estimate confidence in the tree and clades**
 
-ASTRAL provides various measures of clade or bipartition [support](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support).  
+### Displaying ASTRAL support values on the tree
   
-You can also use [phyparts](https://bitbucket.org/blackrim/phyparts) to obtain a measure of the support in each bipartition in the tree.  
+ASTRAL provides various measures of clade or bipartition [support](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support).  
+They can be displayed on the tree using [Figtree](http://tree.bio.ed.ac.uk/software/figtree/) or custom R scripts.  
+
+To interpret the support values provided by Astral, look at [S. Mirarab](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support) website.  
+
+[DiscoVista](https://github.com/esayyari/DiscoVista) can help you explore conflicts among gene trees, quartet by quartet.  
+
+
+### Displaying bipartition support values on the tree using Phyparts
+
+You can also use [phyparts](https://bitbucket.org/blackrim/phyparts) to obtain a measure of the support for each bipartition in the tree.  
   
 **WARNING!**: To use phyparts properly, the species tree and the gene trees have to be rooted using the same rooting method!  
-if you generate the species tree with ASTRAL (see above), use the -t 0 option to not have annotations.  
+If you generate the species tree with ASTRAL (see above), use the -t 0 option to not have annotations.  
 
 Example of phyparts command:
 ```
-java -jar target/phyparts-0.0.1-SNAPSHOT-jar-with-dependencies.jar -a 1 -s 70 -v -d gene-trees/ -m species_tree.tre -o out-prefix
+java -jar /PATH/target/phyparts-0.0.1-SNAPSHOT-jar-with-dependencies.jar -a 1 -s 70 -v -d gene-trees/ -m species_tree.tre -o out-prefix
 ```
 Use the -s option to collapse clades with a bootstrap percentage lower than the number indicated (here 70%).  
-Alternatively, you could collapse clades before loading the trees into phyparts, using newick utilities, and concatenate the collapsed gne trees into one file:
+  
+Alternatively, you could collapse clades before loading the trees into phyparts, using newick utilities, and concatenate the collapsed gene trees into one file:
 ```
 for f in *.tre; do (nw_ed $f ‘i & b<=70’ o > ${f/.tre}_collapsed70.tre); done
 cat *collapsed70.tre > all_trees.tre
 ```
   
-Put the output from phyparts in a separate directory in order to visualize it (see below).
-  
-  
-## **9. Visualize support on the species tree**
-
-### Make piecharts based on the results from phyparts
-You can generate piecharts corresponding to the results from the phyparts analysis using Matt Johnson's [script](https://github.com/mossmatters/phyloscripts/tree/master/phypartspiecharts) 
-
-Indicate the path to ete3 (example in trichopilia):
+- Put the output from phyparts in a separate directory in order to visualize it.
+- You can generate piecharts corresponding to the results from the phyparts analysis using Matt Johnson's [script](https://github.com/mossmatters/phyloscripts/tree/master/phypartspiecharts)   
+- Indicate the path to ete3:
 ```
-export PATH=/home/sidonie/anaconda_ete/bin:$PATH
+export PATH=/PATH/anaconda_ete/bin:$PATH
 ```
 Run the script:
 ```
 xvfb-run python phypartspiecharts_MJohnson.py species_tree.tre phyparts-out/out-prefix gene-number
 ```
-The ""xvfb-run" is sometimes necessary if you run it remotely, but not needed if you run it locally (for instance if you installed ete3 on your computer).
+The ""xvfb-run" is sometimes necessary if you run it remotely, but not needed if you run it locally (for instance if you installed ete3 on your computer).  
   
-### Make piecharts corresponding to the Astral support
-
-We have scripts to generate piecharts based on ASTRAL local posterior probabilities, or quartet support. Just ask. 
-
-
-### Support interpretation for phyparts 
-From [S. Smith](https://bitbucket.org/blackrim/phyparts) and [M. Johnson](https://github.com/mossmatters/phyloscripts/tree/master/phypartspiecharts) websites, and assuming no change in colors from M. Johnson's original script:  
-  
-Blue: Support the shown topology = percentage of gene trees concordant with the shown topology  
-Green: Conflict with the shown topology (most common conflicting bipartion) = percentage of gene trees showing the most common conflicting topology  
-Red: Conflict with the shown topology (all other supported conflicting bipartitions) = percentage of gene trees showing any other conflicting topology  
-Gray: Neither concordant nor conflicting with the shown topology = percentage of gene trees showing neither support nor conflict with the shown topology. Includes topologies compatible with (but not supporting) the shown topology, and topologies supporting or conflicting the shown topology but with low bootstrap support ("low" being what you set up during phyparts analysis).  
-Numbers above branches: number of gene trees concordant with the shown topology (blue)  
-Number below branches: number of gene trees conflicting with the shown topology (red + green)  
-
-### Support interpretation for the direct output of Astral 
-
-Look at [S. Mirarab](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support) website.
+- To understand how to interpret the pie charts provided by phyparts, see [S. Smith](https://bitbucket.org/blackrim/phyparts) and [M. Johnson](https://github.com/mossmatters/phyloscripts/tree/master/phypartspiecharts) websites. Assuming no change in colors from M. Johnson's original script:
+  - Blue: Support the shown topology = percentage of gene trees concordant with the shown topology  
+  - Green: Conflict with the shown topology (most common conflicting bipartion) = percentage of gene trees showing the most common conflicting topology  
+  - Red: Conflict with the shown topology (all other supported conflicting bipartitions) = percentage of gene trees showing any other conflicting topology  
+  - Gray: Neither concordant nor conflicting with the shown topology = percentage of gene trees showing neither support nor conflict with the shown topology. Includes topologies compatible with (but not supporting) the shown topology, and topologies supporting or conflicting the shown topology but with low bootstrap support ("low" being what you set up during phyparts analysis).  
+  - Numbers above branches: number of gene trees concordant with the shown topology (blue)  
+  - Number below branches: number of gene trees conflicting with the shown topology (red + green)  
 
 
 
-## 10. Dating divergence times
+## 9. Dating divergence times
 
 **DO NOT** use ASTRAL branch lengths (see S. Mirarab [github](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support) for explanations and for coming-soon approach to date phylogenomic datasets)
