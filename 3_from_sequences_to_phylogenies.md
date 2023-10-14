@@ -20,7 +20,22 @@ According to research conducted by people in [T. Warnow's lab](http://tandy.cs.i
 
 ### MAFFT
 See the documentation [here](https://mafft.cbrc.jp/alignment/software/)  
+
+Basic MAFFT command:  
+```
+mafft --thread 2 --genafpair --adjustdirectionaccurately --maxiterate 1000 "$name".fasta > "$name"_alM.fasta
+```
+This is just an example, look at the documentation to chose adequate options!
+Note the "--adjustdirectionaccurately" option, which reverse complement sequences if necessary.  
+  
+Sometimes, you need to replace ```_R_``` by nothing in the aligned fasta files because if mafft reversed a sequence it appended ```_R_``` at the beginning of its name. Here is a line of code that can do that on all alignments and append ```_r``` to the name of the resulting alignment:  
+```
+for f in *.fasta; do (sed -e 's/_R_//g' $f > ${f/.fasta}_r.fasta); done
+```
+
+  
 Example of command to run MAFFT on multiple files using GNU parallel (see Matt Johnson explanation [here](https://github.com/mossmatters/KewHybSeqWorkshop/blob/master/Alignment.md)):
+This is not really needed if you run MAFFT on a HPC using an array job. See the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md).
 ```
 # Make a list of the gene names:
 for f in *.fasta; do (echo $f >> genenames.txt); done
@@ -29,12 +44,8 @@ less genenames.txt
 # run MAFFT on all genes from the list:
 parallel --eta "mafft --localpair --adjustdirectionaccurately --maxiterate 1000 {} > {}.aligned.fasta" :::: genenames.txt
 ```
-This is just an example, look at the documentation to chose adequate options!
-Note the "--adjustdirectionaccurately" option, which reverse complement sequences if necessary.
-  
-As well as running MAFFT with the GNU-Parallel command, it’s possible, as with HybPiper, to run this in parallel on a cluster as a simple array job using one CPU for each gene, for instance through slurm. See the [slurm cheat sheet](https://github.com/sidonieB/Workflows/blob/main/Slurm_cheat_sheet.md).  
-  
-Alternatively, for aligning big alignments MAFFt has a –thread option that can be set to the number of cores on your machine.   
+    
+For aligning big alignments MAFFt has a –thread option that can be set to the number of cores on your machine.   
 Explained [here](https://mafft.cbrc.jp/alignment/software/multithreading.html).  
 There is also a [MPI version](https://mafft.cbrc.jp/alignment/software/mpi.html).
 
@@ -53,7 +64,7 @@ UPP produces more accurate alignments than MAFFT or PASTA in the case of fragmen
 UPP splits the data set into more fragmented and less fragmented sequences. It then produces a backbone alignment and Hidden Markov Models (HMM) from the less fragmented sequences and attempts to fit the more fragmented sequences into each HMM. The final alignment is then selected from the best supported HMM.  
 If the range of sequence lengths is highly variable or most of your fragments are much shorter than the target reference sequence, you can use the UPP ```-M``` option, and you may need to specify something like "95th percentile of all sequence lengths in data set" as input for this option.
 
-### Concatenate alignments (if needed)
+## **2. Concatenate alignments (if needed)**
 
 We know of two command line tools: [FASconCAT-G](https://github.com/PatrickKueck/FASconCAT-G) and [AMAS](https://github.com/marekborowiec/AMAS). The latter seems more robust to big alignments.
 The command to run AMAS is:
@@ -65,11 +76,24 @@ AMAS.py does some other useful things including giving a summary of an alignment
 python3  AMAS.py summary -i alignment.fasta -f fasta -d dna
 ```
 
-### Spotting alignment problems and trimming alignments
+## **3. Spotting alignment problems and trimming alignments**
+  
+It is often a good idea to spend some time looking at your alignments.  
 [FluentDNA](https://github.com/josiahseaman/FluentDNA) allows to look at many alignments and visually spot abnormalities, changes in nucleotide frequencies etc.  
 
-We have used [trimAl](http://trimal.cgenomics.org/) to trim alignments.  
-It can be used to trim out columns or sequences based on their gap content.  
+Alignments can be ambiguous or problematic in many ways:  
+- They can have sites (columns) with many gaps
+- They can have sequences (rows) with many gaps
+- They can have sequences that are mis-aligned with the rest, or that are very divergent
+- They can have some regions that are mis-aligned or ambiguously aligned
+  
+Often, it is best to remove sites and sequences that are source of ambiguity or unreliable. The quality of the alignment will have a strong impact on the phylogenetic tree estimation!  
+Below are some programs that we found useful to clean alignments.  
+Ideally, you should use them on a few alignments representative of the issues found in our dataset, see how each program changes the alignments, and adapt the programs settings accordingly instead of just using defaults settings.  
+
+#### Remove gappy sites and uninformative alignments with trimAl or optrimAl  
+  
+[trimAl](http://trimal.cgenomics.org/) can be used to trim out columns or sequences based on their gap content.  
 For instance:
 ```
 trimal -in concatenated.out -out concat_trimmalled.fas -automated -resoverlap 0.65 -seqoverlap 0.65
@@ -77,9 +101,9 @@ trimal -in concatenated.out -out concat_trimmalled.fas -automated -resoverlap 0.
 
 Another suite of tools to perform similar tasks and many others is [phyutility](https://github.com/blackrim/phyutility).  
 
-Trimming can sometimes result in loss of informativeness. It may be worthwhile to check that the trimming parameters did not actually make things worse. For example, one can use the [**optrimAl**](https://github.com/keblat/bioinfo-utils/blob/master/docs/advice/scripts/optrimAl.txt) R script (+ pasta_taster bash script), which uses [AMAS](https://github.com/marekborowiec/AMAS) to explore the effect of different trimAl gap threshold values on the proportion of parsimony informative sites and amount of data loss.
+Trimming can sometimes result in loss of informativeness. It may be worthwhile to check that the trimming parameters did not actually make things worse. For example, one can use instead [**optrimAl**](https://github.com/keblat/bioinfo-utils/blob/master/docs/advice/scripts/optrimAl.txt), which uses [AMAS](https://github.com/marekborowiec/AMAS) to explore the effect of different trimAl gap threshold values on the proportion of parsimony informative sites and amount of data loss.
 
-#### Instructions to run [**optrimAl**](https://github.com/keblat/bioinfo-utils/blob/master/docs/advice/scripts/optrimAl.txt) on multiple alignments at once:  
+##### Instructions to run [**optrimAl**](https://github.com/keblat/bioinfo-utils/blob/master/docs/advice/scripts/optrimAl.txt) on multiple alignments at once:  
   
 - You need 3 files: PASTA_taster.sh, cutoff_trim.txt and optrimal.R (the scripts PASTA_taster.sh and optrimal.R can be found on the optrimAl webpage, you will need to save the two scripts provided on that page in two separate files named PASTA_taster.sh and optrimal.R. The cutoff_trim.txt is a text file that you have to make yourself, with desired trimming threshold values, one per line. Make sure you do not have \r end of line characters if you make the file in windows).
 - Decide what your working directory will be in the cluster (e.g. the directory with the alignment files, or a directory with a copy of the alignments).  
@@ -95,22 +119,95 @@ If it fails at the Rscript step, run the last line: "Rscript PATH/optrimal.R" in
 There may be less alignments than before if the optimal trimming was to discard the alignment due to a lack of informativeness.  
 The list of alignments lost is in overlost.txt. It is important to know because it will change the number of files to process in downstream analyses.
 
-[TAPER](https://github.com/chaoszhang/TAPER) is the only tool we know so far that can remove spurious bits in individual sequences. It is not perfect though and only the default settings seem to work as expected.  
-  
-[CIAlign](https://github.com/KatyBrown/CIAlign) can trim alignment columns and rows based on various criteria. It is especially a great tool to remove sequences that are completely spurious, which will be detected based on how different they are from the rest of the sequences. It is even possible to specify sequences to keep regardless of how different they are, for instance an outgroup sequence.  
-  
-We found that using OptrimAl, CIAlign, TAPER, and again OptrimAl gave good results.
+#### Remove spurious sequences (and sites) with CIAlign
 
-### Renaming sequences in all alignments
+[CIAlign](https://github.com/KatyBrown/CIAlign) can trim alignment columns and rows based on various criteria. It is especially a great tool to remove sequences that are completely spurious, which will be detected based on how different they are from the rest of the sequences. It is even possible to specify sequences to keep regardless of how different they are, for instance an outgroup sequence.  
+
+Basic CIAlign command to remove spurious sequences:
+```
+CIAlign.py --infile alignment.fasta --outfile_stem alignment_prefix --remove_divergent --remove_divergent_minperc 0.85 --retain_str Outgroup_name --plot_input --plot_output --plot_markup
+```
+
+#### Remove spurious sequence stretches with TAPER
+
+[TAPER](https://github.com/chaoszhang/TAPER) can remove spurious bits in individual sequences while keeping the rest of the sequence. As far as we know, only the default settings seem to work as expected.  
+
+Basic TAPER command (it requires julia):
+```
+/PATH/julia-1.6.2/bin/julia /PATH/TAPER-master/correction_multi.jl -m N -a N alignment.fasta > clean_alignment.fasta
+```
+    
+**We found that using OptrimAl, CIAlign, TAPER, and again OptrimAl gave satisfactorily clean alignments without excessive loss of data**  
+
+
+#### Renaming sequences in all alignments
   
 We have scripts for that, just ask!
 
-## **2. Gene trees**
 
-### Model selection
-This can be done efficiently in IQ tree and the model chosen can then be indicated to RAxML, which performs the "standard" (not ultrafast) bootstrap more quickly than IQ tree.
+  
+## **4. Estimating Gene trees**
+
+### Selecting an appropriate model of nucleotide substitution
+  
+This can be done efficiently in [IQtree](http://www.iqtree.org/) and the model chosen can then be indicated to [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/), or in [raxml-ng](https://github.com/amkozlov/raxml-ng), which perform the "standard" (not ultrafast) bootstrap more quickly than IQtree.  
+Alternatively, both model selection and gene tree estimation can be performed in IQtree, including bootstrap or ultrafast bootstrap support values estimations. The standard bootstrap estimation may take a very long time if done in IQtree.  
+
+Basic IQtree command to select a nucleotide substitution model:
+```
+/PATH/iqtree-1.6.12-Linux/bin/iqtree -s alignment.fasta -m MF -AICc -nt AUTO -ntmax 2
+```
+Check the great documentation to make sure this fits your situation!  
+
+  
+### Editing and interpreting the output of IQtree to use it in raxml
+  
+This is a set of instructions to retrieve the best model of substitution selected by IQtree for a set of genes, and make a list of the gene names and a separate list of the corresponding model of substitution, in a format understood by raxml-ng.  
+  
+**Extract the best model from all IQtree output files**
+- From the folder containing the IQtree outputs, run:
+```
+ls *.log > file_names.txt
+while read f; do grep "Best-fit model" $f; done < file_names.txt >> models.txt
+paste -d "\t" file_names.txt models.txt > All_models.txt
+rm file_names.txt
+rm models.txt
+```
+  
+- Edit the model list to keep only the alignment file name and the model
+```
+sed -e 's/.fasta.log//g' -e 's/Best-fit model: //g' -e 's/ chosen according to AICc//g' All_models.txt > All_models_2.txt
+```
+  
+- Check what models were found and if some names need to be edited to be recognised by raxml-ng:
+```
+cut -f2 All_models_2.txt > All_models_2_models.txt
+sort -u All_models_2_models.txt > All_models_2_models_su.txt
+```
+  
+- Download the All_models_2_models_su.txt file and open it in excel to see what models there are.  
+For each model, look if the model name needs to be edited and write down what should be the new model name so that raxml-ng can understand it.   See [here](https://github.com/amkozlov/raxml-ng/wiki/Input-data#evolutionary-model) and [here](http://www.iqtree.org/doc/Substitution-Models) to find out correct model names.  
+  
+- Example of a command to edit the model names in the original list:
+```
+sed -e 's/GTR+/GTR+/g' -e 's/HKY+/HKY+/g' -e 's/K2P+/K80+/g' -e 's/K3P+/K81+/g' -e 's/K3Pu+/K81uf+/g' -e 's/SYM+/SYM+/g' -e 's/TIM2e+/TIM2+/g' -e 's/TIM2+/TIM2uf+/g' -e 's/TIM3e+/TIM3+/g' -e 's/TIM3+/TIM3uf+/g' -e 's/TIMe+/TIM1+/g' -e 's/TIM+/TIM1uf+/g' -e 's/TNe+/TN93ef+/g' -e 's/TN+/TN93+/g' -e 's/TPM2+/TPM2+/g' -e 's/TPM2u+/TPM2uf+/g' -e 's/TPM3+/TPM3+/g' -e 's/TPM3u+/TPM3uf+/g' -e 's/TVMe+/TVMef+/g' -e 's/TVM+/TVM+/g' All_models_2.txt > All_models_3.txt
+```
+Make sure you edit the above command to modify your own model names!  
+You may need to edit the *_3.txt list locally by hand for the models such as K2P and K3P that do not have a + after the model name, because making a sed command for them like above may lead to unexpected results.  
+  
+- Save the edited file as All_models_4.txt (make sure that end of lines do not contain \r if you did this in Windows)
+
+- Generate a list of models with their edited names, and a list of corresponding gene names:
+```
+cut -f2 All_models_4.txt > All_models_4_models.txt
+cut -f1 All_models_4.txt > All_models_4_names.txt
+```
+The first model in All_models_4_models.txt is the model selected for the first gene in All_models_4_names.txt and so on...  
+This will enable to run raxml-ng on all genes in an array job, picking the right model for the right gene.  
+
 
 ### Gene tree estimation using maximum likelihood
+  
 We often use RAxML, see full documentation [here](https://sco.h-its.org/exelixis/web/software/raxml/) to understand the options.  
 Example of command to get gene trees with 100 bootstrap replicates, with branch lengths in the bootstrap files (option -k):
 ```
@@ -120,15 +217,33 @@ Be careful with the -T option, which controls the number of threads to use!
 According to the manual the benfit of using -T will depend on the number of site patterns, so for an average gene it is not worth setting -T to more than 2 or at most 4, although this will depend on the model of evolution and if the sequences are nucleotides or amino-acids.  
 The -p and -x options are important for reproducibility, the number does not matter but you should take note of it (see the manual).
   
-If you have a big cluster, gene trees can be produced in parallel as a simple array job using as many cpus as you have alignments.
+If you have access to a HPC, gene trees can be produced in parallel using an array job.  
   
 For concatenated alignments RaxML can also be run in MPI mode, or in HYBRID mode with parallelisation of “coarse grain” processes over nodes (e.g. building separate bootstrap trees) and “fine-grain” processes using multithreading of multiple processors on a single machine (e.g. working on a single tree). See [documentation](https://help.rc.ufl.edu/doc/RAxML).
   
 The trees to be used for species tree estimation with ASTRAL (see below) are the RAxML_bipartitions.* trees, NOT the RAxML_bipartitionsBranchLabels.* trees.
 
-Another accurate option is [IQ-Tree](http://www.iqtree.org/) but the ultra-fast bootstrap is less accurate and its standard bootstrap takes much more time to compute than when done in RAxML
+
+For genomic datasets, raxml-ng may be a more efficient option.  It seems to be more accurate and quick than RAxML.  
+Basic raxml-ng command:
+```
+raxml-ng --all --msa alignment.fasta --model model --bs-trees 100 --threads auto{8} --tree pars{30},rand{30} --seed 1 --prefix prefix
+# Check that found only one tree (global optimum) instead of many (local optima)
+raxml-ng --rfdist --tree prefix.raxml.mlTrees --prefix RF6_prefix
+# Check convergence of bootstrap trees
+raxml-ng --bsconverge --bs-trees prefix.raxml.bootstraps --prefix prefix --seed 1 --threads auto{8} --bs-cutoff 0.03
+
+```
+Above, "prefix" is for instance the name of the gene, and "model" is the desired model of nucleotide substitution (for instance the one selected by IQtree).  
   
-## **3. Spotting alignment problems by observing gene trees**
+Another accurate option is [IQ-Tree](http://www.iqtree.org/) but the ultra-fast bootstrap is less accurate and its standard bootstrap takes much more time to compute than when done in RAxML.
+
+Basic IQtree command to select a model of nucleotide substitution, and make a tree with 1000 ultrafast bootstrap replicates:  
+```
+
+```
+  
+## **5. Spotting alignment problems by observing gene trees**
 
 When you have hundreds of alignments, looking at all of them to spot wrong alignments or weird sequences becomes difficult, so people are developping tools to spot problems automatically.  
 
@@ -139,7 +254,7 @@ U. Mai and S. Mirarab's [Treeshrink](https://github.com/uym2/TreeShrink) to do t
 If you can have a look at your alignments don't hesitate though...  
 
 
-## **4. Infer species tree with ASTRAL**
+## **6. Infer a species tree with ASTRAL**
 
 Taxa names have to be the same in all trees (but you can have missing taxa).  
 
@@ -169,7 +284,7 @@ sed "s/'//g" SpeciesTree2.tre > SpeciesTree3.tre
 
 The ASTRAL option ```-t 10``` does a polytomy test and may help in assessing if a short branch could reflect insufficient data or be due to a true polytomy. See the corresponding paper [here](https://arxiv.org/abs/1708.08916).
 
-## **5. Rooting trees**
+## **7. Rooting trees**
 
 **WARNING!** If you use phyparts (see below) or more generally if you have to compare gene trees to your species tree, it is important that the same rooting method is applied to all trees.
 
@@ -222,7 +337,7 @@ Ensure that the end of all rooted gene trees has a ";" and that it finishes with
 for f in *.tre; do (sed 's/\;\n/\;\r\n/' $f > ${f/.tre}2.tre); done
 ```
 
-## **6. Calculate support**
+## **8. Estimate confidence in the tree and clades**
 
 ASTRAL provides various measures of clade or bipartition [support](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support).  
   
@@ -245,7 +360,7 @@ cat *collapsed70.tre > all_trees.tre
 Put the output from phyparts in a separate directory in order to visualize it (see below).
   
   
-## **7. Visualize support on the species tree**
+## **9. Visualize support on the species tree**
 
 ### Make piecharts based on the results from phyparts
 You can generate piecharts corresponding to the results from the phyparts analysis using Matt Johnson's [script](https://github.com/mossmatters/phyloscripts/tree/master/phypartspiecharts) 
@@ -281,6 +396,6 @@ Look at [S. Mirarab](https://github.com/smirarab/ASTRAL/blob/master/astral-tutor
 
 
 
-## 8. Dating divergence times
+## 10. Dating divergence times
 
 **DO NOT** use ASTRAL branch lengths (see S. Mirarab [github](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support) for explanations and for coming-soon approach to date phylogenomic datasets)
