@@ -128,6 +128,11 @@ Basic CIAlign command to remove spurious sequences:
 CIAlign.py --infile alignment.fasta --outfile_stem alignment_prefix --remove_divergent --remove_divergent_minperc 0.85 --retain_str Outgroup_name --plot_input --plot_output --plot_markup
 ```
 
+A CIAlign command to further clean the alignments using mostly default settings (partly redundant with optrimAl so best not use both together):
+```
+CIAlign.py --infile alignment.fasta --outfile_stem alignment_prefix --remove_divergent --remove_divergent_minperc 0.85 --remove_divergen_retain_str Outgroup_name --remove_insertions --remove_short --remove_gap_only --plot_input --plot_output --plot_markup
+```
+
 #### Remove spurious sequence stretches with TAPER
 
 [TAPER](https://github.com/chaoszhang/TAPER) can remove spurious bits in individual sequences while keeping the rest of the sequence. As far as we know, only the default settings seem to work as expected.  
