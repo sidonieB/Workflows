@@ -77,7 +77,23 @@ trimal -in concatenated.out -out concat_trimmalled.fas -automated -resoverlap 0.
 
 Another suite of tools to perform similar tasks and many others is [phyutility](https://github.com/blackrim/phyutility).  
 
-Trimming can sometimes result in loss of informativeness. It may be worthwhile to check that the trimming parameters did not actually make things worse. For example, one can use our [**optrimAl**](https://github.com/keblat/bioinfo-utils/blob/master/docs/advice/scripts/optrimAl.txt) R script (+ pasta_taster bash script), which uses [AMAS](https://github.com/marekborowiec/AMAS) to explore the effect of different trimAl gap threshold values on the proportion of parsimony informative sites and amount of data loss.
+Trimming can sometimes result in loss of informativeness. It may be worthwhile to check that the trimming parameters did not actually make things worse. For example, one can use the [**optrimAl**](https://github.com/keblat/bioinfo-utils/blob/master/docs/advice/scripts/optrimAl.txt) R script (+ pasta_taster bash script), which uses [AMAS](https://github.com/marekborowiec/AMAS) to explore the effect of different trimAl gap threshold values on the proportion of parsimony informative sites and amount of data loss.
+
+#### Instructions to run [**optrimAl**](https://github.com/keblat/bioinfo-utils/blob/master/docs/advice/scripts/optrimAl.txt) on multiple alignments at once:  
+  
+- You need 3 files: PASTA_taster.sh, cutoff_trim.txt and optrimal.R (they can be found on the optrimAl webpage)
+- Decide what your working directory will be in the cluster (e.g. the directory with the alignment files, or a directory with a copy of the alignments).  
+- **Do not put anything else in the directory**, just the files to process and the scripts (see below)  
+- Edit paths as needed in PASTA_taster.sh, depending on the working directory you chose
+- Edit thresholds as needed in cutoff_trim.txt (0,0.1,0.3,0.5,0.7,0.9,1 could be good)  
+- Edit the setwd path in optrimal.R, depending on the working directory you chose  
+Make sure you do not change anything else and that there is no \r end of lines if you edited the files in Windows  
+- Copy the three files in the chosen working directory  
+- Run ```bash PASTA_taster.sh``` from that working directory (do it through slurm if on the HPC)  
+If it fails at the Rscript step, run the last line: "Rscript PATH/optrimal.R" in an interactive slurm (but it should be fine)  
+- Move the optimally trimmed alignments in a new folder for downstream analyses.  
+There may be less alignments than before if the optimal trimming was to discard the alignment due to a lack of informativeness.  
+The list of alignments lost is in overlost.txt. It is important to know because it will change the number of files to process in downstream analyses.
 
 [TAPER](https://github.com/chaoszhang/TAPER) is the only tool we know so far that can remove spurious bits in individual sequences. It is not perfect though and only the default settings seem to work as expected.  
   
