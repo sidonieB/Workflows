@@ -240,7 +240,7 @@ Another accurate option is [IQ-Tree](http://www.iqtree.org/) but the ultra-fast 
 
 Basic IQtree command to select a model of nucleotide substitution, and make a tree with 1000 ultrafast bootstrap replicates:  
 ```
-
+/PATH/iqtree-1.6.12-Linux/bin/iqtree -s alignment.fasta -nt AUTO -ntmax 2 -bb 1000
 ```
   
 ## **5. Spotting alignment problems by observing gene trees**
@@ -259,17 +259,23 @@ If you can have a look at your alignments don't hesitate though...
 Taxa names have to be the same in all trees (but you can have missing taxa).  
 
 Combine all species tree files in one file with the **cat** command: 
+Example for raxml-ng:
 ```
-cat  *raxml.tree > alltrees.tre
+while read name
+do cat "$name".raxml.support >> all_trees.tre && echo "" >> all_trees.tre
+done < gene_names.txt
 ```
+Above, gene_names.txt contains the names of the genes you want to use to make the species tree. 
 
-We use ASTRAL-III (version 5.1.1 and above). See the article [here](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2129-y) and ASTRAL documentation [here](https://github.com/smirarab/ASTRAL).
+  
+We use ASTRAL-III (version 5.1.1 and above). See the article [here](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2129-y) and ASTRAL documentation [here](https://github.com/smirarab/ASTRAL).  However, a better option may be Weighted Astral, i.e. [wASTRAL](https://github.com/chaoszhang/ASTER/blob/master/tutorial/astral-hybrid.md), part of the ASTER suite, because it gives a higher weight to clades with higher bootstrap support values, thereby limiting the negative impact that gene tree error has on ASTRAL.  
+  
 When using ASTRAL-III, it is better to collapse very low support branches in the gene trees before running ASTRAL.  
 It can be done with newick utilities in the following way (for branches with less than 10% bootstrap):  
 ```
-~/software/newick-utils-1.6/src/nw_ed all_trees.tre 'i & b<=10' o > all_trees-BS10.tre
+/PATH/newick-utils-1.6/src/nw_ed all_trees.tre 'i & b<=10' o > all_trees-BS10.tre
 ```
-Do not over collapse! S. Mirarab's work shows that using a threashold of 10 to 33% of bootstrap support to collapse clades results in less errors in the species tree than inferior or superior thresholds.  
+Do not over collapse! S. Mirarab's work shows that using a threshold of 10 to 33% of bootstrap support to collapse clades results in less errors in the species tree than inferior or superior thresholds.  
   
   
 To run Astral with the -t 0 option, and get the species tree from the stdout, without any annotations or branch lengths:
@@ -280,6 +286,11 @@ If astral had '[p=...]' annotations (other -t options, see the manual), the foll
 ```
 sed 's/\[[^\[]*\]//g'SpeciesTree.tre > SpeciesTree2.tre
 sed "s/'//g" SpeciesTree2.tre > SpeciesTree3.tre
+```
+
+To run Astral with all annotations:
+```
+java -jar /PATH/astral.5.7.5.jar -i all_trees-BS10.tre -t 2 -o SpeciesTree_annotQ.tre
 ```
 
 The ASTRAL option ```-t 10``` does a polytomy test and may help in assessing if a short branch could reflect insufficient data or be due to a true polytomy. See the corresponding paper [here](https://arxiv.org/abs/1708.08916).
