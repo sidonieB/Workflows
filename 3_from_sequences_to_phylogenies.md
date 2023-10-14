@@ -81,7 +81,7 @@ Trimming can sometimes result in loss of informativeness. It may be worthwhile t
 
 #### Instructions to run [**optrimAl**](https://github.com/keblat/bioinfo-utils/blob/master/docs/advice/scripts/optrimAl.txt) on multiple alignments at once:  
   
-- You need 3 files: PASTA_taster.sh, cutoff_trim.txt and optrimal.R (they can be found on the optrimAl webpage, you will need to save the two scripts provided on that page in two separate files)
+- You need 3 files: PASTA_taster.sh, cutoff_trim.txt and optrimal.R (the scripts PASTA_taster.sh and optrimal.R can be found on the optrimAl webpage, you will need to save the two scripts provided on that page in two separate files named PASTA_taster.sh and optrimal.R. The cutoff_trim.txt is a text file that you have to make yourself, with desired trimming threshold values, one per line. Make sure you do not have \r end of line characters if you make the file in windows).
 - Decide what your working directory will be in the cluster (e.g. the directory with the alignment files, or a directory with a copy of the alignments).  
 - **Do not put anything else in the directory**, just the files to process and the scripts (see below)  
 - Edit paths as needed in PASTA_taster.sh, depending on the working directory you chose
