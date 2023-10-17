@@ -25,7 +25,7 @@ See the documentation [here](https://mafft.cbrc.jp/alignment/software/)
 
 Basic MAFFT command:  
 ```
-mafft --thread 2 --genafpair --adjustdirectionaccurately --maxiterate 1000 "$name".fasta > "$name"_alM.fasta
+mafft --thread 2 --genafpair --adjustdirectionaccurately --maxiterate 1000 file_with_sequences.fasta > alignment.fasta
 ```
 This is just an example, look at the documentation to chose adequate options!
 Note the "--adjustdirectionaccurately" option, which reverse complement sequences if necessary.  
@@ -133,7 +133,7 @@ CIAlign.py --infile alignment.fasta --outfile_stem alignment_prefix --remove_div
 
 A CIAlign command to further clean the alignments using mostly default settings (partly redundant with optrimAl so best not use both together):
 ```
-CIAlign.py --infile alignment.fasta --outfile_stem alignment_prefix --remove_divergent --remove_divergent_minperc 0.85 --remove_divergen_retain_str Outgroup_name --remove_insertions --remove_short --remove_gap_only --plot_input --plot_output --plot_markup
+CIAlign.py --infile alignment.fasta --outfile_stem alignment_prefix --remove_divergent --remove_divergent_minperc 0.85 --remove_divergent_retain_str Outgroup_name --remove_insertions --remove_short --plot_input --plot_output --plot_markup
 ```
 
 #### Remove spurious sequence stretches with TAPER
@@ -145,12 +145,14 @@ Basic TAPER command (it requires julia):
 /PATH/julia-1.6.2/bin/julia /PATH/TAPER-master/correction_multi.jl -m N -a N alignment.fasta > clean_alignment.fasta
 ```
     
-**We found that using OptrimAl, CIAlign, TAPER, and again OptrimAl gave satisfactorily clean alignments without excessive loss of data**  
+**We found that using OptrimAl, CIAlign, TAPER, and again OptrimAl gave satisfactorily clean alignments without excessive loss of data** 
+
+**CIAlign may actually be able to achieve the same on its own. It is best to experiement a bit to find the combination suiting best your dataset**
 
 
 #### Rename sequences in all alignments
   
-We have scripts for that, just ask!
+We have scripts for that, check the scripts section!
 
 
   
@@ -163,7 +165,7 @@ Alternatively, both model selection and gene tree estimation can be performed in
 
 Basic IQtree command to select a nucleotide substitution model:
 ```
-/PATH/iqtree-1.6.12-Linux/bin/iqtree -s alignment.fasta -m MF -AICc -nt AUTO -ntmax 2
+/PATH/iqtree -s alignment.fasta -m MF -AICc -nt AUTO -ntmax 2
 ```
 Check the great documentation to make sure this fits your situation!  
 
@@ -253,7 +255,7 @@ Another accurate option is [IQ-Tree](http://www.iqtree.org/) but the ultra-fast 
 [IQtree](http://www.iqtree.org/) is also a great option:  
 Basic IQtree command to select a model of nucleotide substitution, and make a tree with 1000 ultrafast bootstrap replicates:  
 ```
-/PATH/iqtree-1.6.12-Linux/bin/iqtree -s alignment.fasta -nt AUTO -ntmax 2 -bb 1000
+/PATH/iqtree -s alignment.fasta -nt AUTO -ntmax 2 -bb 1000
 ```
   
 ## **5. Spot alignment problems by observing gene trees**
@@ -287,14 +289,14 @@ However, a better option may be Weighted Astral, i.e. [wASTRAL](https://github.c
 When using ASTRAL-III, it is better to collapse very low support branches in the gene trees before running ASTRAL.  
 It can be done with newick utilities in the following way (for branches with less than 10% bootstrap):  
 ```
-/PATH/newick-utils-1.6/src/nw_ed all_trees.tre 'i & b<=10' o > all_trees-BS10.tre
+/PATH/nw_ed all_trees.tre 'i & b<=10' o > all_trees-BS10.tre
 ```
 Do not over collapse! S. Mirarab's work shows that using a threshold of 10 to 33% of bootstrap support to collapse clades results in less errors in the species tree than inferior or superior thresholds.  
   
   
 To run Astral with the -t 0 option, and get the species tree without any annotations or branch lengths:
 ```
-java -Xmx12000M -jar ~/software/ASTRAL/astral.5.5.9.jar -i all_trees-BS10.tre -t 0 -o SpeciesTree.tre
+java -jar /PATH/astral.5.5.9.jar -i all_trees-BS10.tre -t 0 -o SpeciesTree.tre
 ```
 If astral had '[p=...]' annotations (other -t options, see the manual), the following commands could help removing all annotations, but it is generally easier to rerun Astral with -t 0.
 ```
@@ -307,8 +309,9 @@ To run Astral with all annotations:
 java -jar /PATH/astral.5.7.5.jar -i all_trees-BS10.tre -t 2 -o SpeciesTree_annotQ.tre
 ```
 
+When running Astral on a laptop, you may need to add something like ```-Xmx12000M``` after ```java``` in the command, to tell java that it can use a certain amount of RAM, here 12 G (12000 M).  
+  
 The ASTRAL option ```-t 10``` does a polytomy test and may help in assessing if a short branch could reflect insufficient data or be due to a true polytomy. See the corresponding paper [here](https://arxiv.org/abs/1708.08916).  
-
 
 
 ## **7. Root trees**
@@ -368,7 +371,7 @@ for f in *.tre; do (sed 's/\;\n/\;\r\n/' $f > ${f/.tre}2.tre); done
 ### Display ASTRAL support values on the tree
   
 ASTRAL provides various measures of clade or bipartition [support](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support).  
-They can be displayed on the tree using [Figtree](http://tree.bio.ed.ac.uk/software/figtree/) or custom R scripts.  
+They can be displayed on the tree using [Figtree](http://tree.bio.ed.ac.uk/software/figtree/) or custom R scripts (check the scripts section).  
 
 To interpret the support values provided by Astral, look at [S. Mirarab](https://github.com/smirarab/ASTRAL/blob/master/astral-tutorial.md#branch-length-and-support) website.  
 
