@@ -223,8 +223,8 @@ conda deactivate
 
 ```
 
-
-
+**Important:** Hybpiper commands provided below use an old version of the software, make sure you adapt the command to use the latest version as shown [here](https://github.com/mossmatters/HybPiper/wiki/Tutorial)
+  
 Run Hybpiper on 1 sample
 ```
 #!/bin/bash
