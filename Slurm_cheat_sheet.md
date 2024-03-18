@@ -223,7 +223,7 @@ conda deactivate
 
 ```
 
-**Important:** Hybpiper commands provided below use an old version of the software, make sure you adapt the command to use the latest version as shown [here](https://github.com/mossmatters/HybPiper/wiki/Tutorial)
+**Important:** Except otherwise indicated, the Hybpiper commands provided below use an old version of the software, make sure you adapt the command to use the latest version as shown [here](https://github.com/mossmatters/HybPiper/wiki/Tutorial)
   
 Run Hybpiper on 1 sample
 ```
@@ -347,6 +347,43 @@ mv $name /PATH/PATH/HP_out
 ```
 
 
+Same as above but with HybPiper version 2:    
+**Run Hybpiper 2 on many samples using an array job using the SSD for temporary storage and moving the output back to the permanent directory:**  
+  
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/directory/
+#SBATCH --job-name=hybpiper
+#SBATCH --partition=medium      
+#SBATCH --array=1-207%50   
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=8G
+#SBATCH --mail-user=xxxx@zzzz.org
+#SBATCH --mail-type=END,FAIL
+
+echo $SLURM_ARRAY_TASK_ID
+
+name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/HP_hybseq_names.txt)
+
+echo $name
+
+cd $TMPDIR
+
+source activate /PATH/conda/envs/hybpiper       # check the path to your environment by running conda env list, you may not have to provide the path, check what works for you
+
+hybpiper assemble --readfiles /PATH/"$name"_R*_Tpaired.fastq -t_dna /PATH/Reference_file.fasta --prefix "$name" --cpu 8
+
+# additional options such as --timeout_assemble 600 --timeout_exonerate_contigs 600 and --cov_cutoff 5  may be useful
+
+mv $name /PATH/PATH/HP_out
+
+conda deactivate
+
+```
+  
+
 Get sequences assembled by HybPiper from all samples, get sequence lengths from the HybPiper output to assess gene recovery and make a heatmap, and get some stats
 ```
 #!/bin/bash
@@ -367,8 +404,34 @@ python /PATH/PATH/apps/HybPiper/get_seq_lengths.py /PATH/PATH/Reference_file.fas
 python /PATH/PATH/apps/HybPiper/hybpiper_stats_MODIFsamtoolsCMD.py /PATH/PATH/HP_207_seq_lengths.txt /PATH/PATH/All_names_207.txt > /PATH/PATH/HP_207_stats.txt
 ```
 
+**Same as above with Hybpiper 2:**  
+In this version, the heatmap is produced as a png file already  
 
-Additional cleaning of HybPiper output files, more stringent. **CAREFUL, read [instructions](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#cleaning-the-hybpiper-output) and understand the commands below before you try it!**
+```
+#!/bin/bash
+#
+#SBATCH --chdir=/PATH/PATH/directory/
+#SBATCH --job-name=hybpiper
+#SBATCH --partition=short     
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=2G
+#SBATCH --mail-user=xxxx@zzzz.org
+#SBATCH --mail-type=END,FAIL
+
+source activate /PATH/conda/envs/hybpiper       # check the path to your environment by running conda env list, you may not have to provide the path, check what works for you
+
+hybpiper stats -t_dna PATH/PATH/Reference_file.fasta gene /PATH/PATH/HP_hybseq_names.txt
+hybpiper recovery_heatmap seq_lengths.tsv
+hybpiper retrieve_sequences dna -t_dna PATH/PATH/Reference_file.fasta --sample_names /PATH/PATH/HP_hybseq_names.txt
+
+conda deactivate
+
+```
+
+
+Additional cleaning of HybPiper output files, more stringent. **CAREFUL, read [instructions](https://github.com/sidonieB/Workflows/blob/main/2_target_capture_data_analysis.md#cleaning-the-hybpiper-output) and understand the commands below before you try it!**  
+This may not be needed anymore when using Hybpiper 2, and if it is needed it may have to be edited for this new version if the output has changed.  
 ```
 #!/bin/bash
 #
