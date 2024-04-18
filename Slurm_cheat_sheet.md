@@ -375,7 +375,7 @@ source activate /PATH/conda/envs/hybpiper       # check the path to your environ
 
 hybpiper assemble --readfiles /PATH/"$name"_R*_Tpaired.fastq -t_dna /PATH/Reference_file.fasta --prefix "$name" --cpu 8
 
-# additional options such as --timeout_assemble 600 --timeout_exonerate_contigs 600 and --cov_cutoff 5  may be useful
+# additional options such as --bwa --timeout_assemble [a number] --timeout_exonerate_contigs [a number] and --cov_cutoff [a number]  may be useful (check the Hybpiper documentation!)
 
 mv $name /PATH/PATH/HP_out
 
