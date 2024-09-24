@@ -96,7 +96,7 @@ Ideally, you should use them on a few alignments representative of the issues fo
 
 #### Remove gappy sites and uninformative alignments with trimAl or optrimAl  
   
-[trimAl](http://trimal.cgenomics.org/) can be used to trim out columns or sequences based on their gap content.  
+[trimAl](https://vicfero.github.io/trimal/) can be used to trim out columns or sequences based on their gap content.  
 For instance:
 ```
 trimal -in concatenated.out -out concat_trimmalled.fas -automated -resoverlap 0.65 -seqoverlap 0.65
