@@ -155,8 +155,7 @@ The Trimmomatic command can be designed the same way, carefully. For instance:
 ```
 for f in *R1_001.fastq; do (java -jar ~/software/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 $f ${f/R1_001.fastq}R2_001.fastq ${f/R1_001.fastq}R1_001_Tpaired.fastq ${f/R1_001.fastq}R1_001_Tunpaired.fastq ${f/R1_001.fastq}R2_001_Tpaired.fastq ${f/R1_001.fastq}R2_001_Tunpaired.fastq ILLUMINACLIP:~/software/Trimmomatic-0.36/adapters/TruSeq3-PE-2.fa:1:30:7:2:true MAXINFO:40:0.85 MINLEN:36); done
 ```
-
-An example of a basic Trimmomatic command (not using MAXINFO) that worked well on 2x150 bp paired-end reads from herbarium samples:
+The above uses the MAXINFO parameter. Below is an an example of a basic Trimmomatic command (not using MAXINFO) that worked well on 2x150 bp paired-end reads from herbarium samples:
 ```
 java -jar Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 R1_file R2_file R1_Tpaired.fastq R1_Tunpaired.fastq R2_Tpaired.fastq R2_Tunpaired.fastq ILLUMINACLIP:Trimmomatic-0.39/adapters/TruSeq3-PE-2.fa:1:30:7:2:true SLIDINGWINDOW:4:30 LEADING:30 MINLEN:40
 ```
