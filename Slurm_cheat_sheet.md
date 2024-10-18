@@ -26,7 +26,7 @@ Here is a heavily commented example of a slurm script to check the quality of se
 ```
 #!/bin/bash
 #
-#SBATCH --chdir=/PATH/directory           # This is the folder where you want slurm to look for the input files (it will also be where the output files are written, except if you specify something else in the script below)
+#SBATCH --chdir=/PATH/directory           # This is the folder where you want slurm to look for the input files (except if you specify something else in the script below) and/or where the output files are written (except if you specify something else below). If nothing else is specified below, the slurm*.out files will also be written there.  
 #SBATCH --job-name=fastqc                 # This is just a name to give to the whole slurm job, it can be anything, it will appear when you check the job status with "squeue"
 #SBATCH --partition=medium                # use short if you expect a single job to last <6 hours, medium if you expect it to last <24 hours, long otherwise. Partition names and time limits will change depending on your HPC!
 #SBATCH --array=1-6                       # if you want to run the script below on 6 samples in parallel (i.e. to run 6 jobs in parallel), this is the option for it, change the number depending on your number of samples/jobs, delete the line if you do not want to run jobs in parallel. NB, you can decide to run 6 jobs but only 2 by 2 if you set it to --array=1-6%2 This is useful when you have many jobs so that you do not monopolise too many ressources at once (see also below my comments about the cpus and mem options)
@@ -194,6 +194,10 @@ name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/na
 echo $name
 
 java -jar /PATH/PATH/apps/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /PATH/PATH/"$name"___R1.fastq /PATH/PATH/"$name"___R2.fastq "$name"___R1_Tpaired.fastq "$name"___R1_Tunpaired.fastq "$name"___R2_Tpaired.fastq "$name"___R2_Tunpaired.fastq ILLUMINACLIP:../../../../../apps/Trimmomatic-0.39/adapters/TruSeq3-PE-2.fa:1:30:7:2:true SLIDINGWINDOW:4:30 LEADING:30 MINLEN:40
+
+# OR more simply when using a prefix (see the manual to make sure that providing -basein will work in your case)
+
+java -jar /PATH/PATH/apps/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 -basein "$name"__R1.fastq -baseout "$name"_Trimmed ILLUMINACLIP:../../../../../apps/Trimmomatic-0.39/adapters/TruSeq3-PE-2.fa:1:30:7:2:true SLIDINGWINDOW:4:30 LEADING:30 MINLEN:40
 
 # IMPORTANT: It seems that the path to the adapter file in the command above has to be given relative to the working directory (i.e. the directory specified with --chdir in the script header), instead of being an absolute path.
 
