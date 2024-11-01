@@ -145,7 +145,9 @@ Basic TAPER command (it requires julia):
 ```
 /PATH/julia-1.6.2/bin/julia /PATH/TAPER-master/correction_multi.jl -m N -a N alignment.fasta > clean_alignment.fasta
 ```
-    
+NB: B. Kuhnhäuser found the following while trying Taper in October 2024: "There is an “aggressive” script on the github (correction_multi_aggressive.jl), and you can modify the multiplier in line 37. It is currently set to 2 / 3 (0.666), but when changing this to a larger value (max seems to be 1), the filtering is more stringent and includes larger patches of divergent sequence. A value of 0.9 seems best to me".  
+
+          
 **We found that using OptrimAl, CIAlign, TAPER, and again OptrimAl gave satisfactorily clean alignments without excessive loss of data** 
 
 **CIAlign may actually be able to achieve the same on its own. It is best to experiement a bit to find the combination suiting best your dataset**
