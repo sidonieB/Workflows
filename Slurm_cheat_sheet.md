@@ -480,6 +480,9 @@ name=$(awk -v lineid=$SLURM_ARRAY_TASK_ID 'NR==lineid{print;exit}' /PATH/PATH/Ge
 echo $name
 
 mafft --thread 8 --genafpair --adjustdirectionaccurately --maxiterate 1000 "$name".fasta > "$name"_alM.fasta
+
+sed -e 's/_R_//g' "$name"_alM.fasta > "$name"_alM_r.fasta
+
 ```
 
 Run TAPER to clean the alignments
